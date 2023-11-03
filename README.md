@@ -6,7 +6,6 @@
 
 GasBall adalah sistem informasi untuk reservasi lapangan futsal yang bertujuan untuk mengefisiensikan proses-proses bisnis lapangan futsal. Proses bisnis yang akan diselesaikan oleh sistem ini meliputi reservasi lapangan, manajemen lapangan (penjaga lapangan, waktu dan tempat operasional lapangan), dan pembukuan pemasukan. Proses reservasi lapangan akan di automasi oleh sistem dengan skema reservasi layaknya pembelian tiket. Pembayaran sendiri akan diverifikasi secara manual oleh admin. Selain itu Manajemen lapangan akan memiliki dashboard untuk melakukan proses role assignment dan jadwal lapangan. Sistem juga memiliki dashboard untuk melihat data reservasi lapangan berdasarkan lapangan dan bulan reservasi.
 
-
 ## Anggota Kelompok
 
 **Kelompok 1 Kelas K01**
@@ -17,7 +16,6 @@ GasBall adalah sistem informasi untuk reservasi lapangan futsal yang bertujuan u
 | 18221121 | Rozan Ghosani           |
 | 18221155 | Raden Dizi Assyafadi P. |
 | 18221173 | Naura Valda Prameswari  |
-
 
 ## Getting Started
 
