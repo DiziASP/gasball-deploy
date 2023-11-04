@@ -2,21 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { AuthApiError, AuthError } from '@supabase/supabase-js';
 
-export async function GET(request :NextRequest) {
+export async function GET(request: NextRequest) {
   const { origin } = request.nextUrl;
 
   return NextResponse.redirect(`${origin}/auth/register`);
 }
 
-export async function POST(request :NextRequest) {
+export async function POST(request: NextRequest) {
   const { username, email, password } = await request.json();
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { username },
-    },
+      data: { username }
+    }
   });
 
   if (!error) {
