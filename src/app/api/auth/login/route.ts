@@ -1,16 +1,17 @@
+/**
+ * @swagger
+ * /api/auth/login:
+ *   get:
+ *     description: Logging In and Redirect user to Main Page
+ *     parameters:
+ *        - email: email
+ *        - password: password
+ *     responses:
+ *       200:
+ *         description: Login Successful
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import {
-  AuthApiError,
-  AuthInvalidCredentialsError,
-  AuthUnknownError
-} from '@supabase/supabase-js';
-
-export async function GET(request: NextRequest) {
-  const { origin } = request.nextUrl;
-
-  return NextResponse.redirect(`${origin}/auth/login`);
-}
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();

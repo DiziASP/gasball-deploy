@@ -1,12 +1,17 @@
+/**
+ * @swagger
+ * /api/auth/register:
+ *   get:
+ *     description: Registering User
+ *     parameters:
+ *        - email: email
+ *        - password: password
+ *     responses:
+ *       200:
+ *         description: Login Successful
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { AuthApiError, AuthError } from '@supabase/supabase-js';
-
-export async function GET(request: NextRequest) {
-  const { origin } = request.nextUrl;
-
-  return NextResponse.redirect(`${origin}/auth/register`);
-}
 
 export async function POST(request: NextRequest) {
   const { username, email, password } = await request.json();
