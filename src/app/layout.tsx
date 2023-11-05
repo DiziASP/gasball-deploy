@@ -10,7 +10,7 @@ export const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: 'GasBall',
-  description: 'BM main futsal? Kami solusinya!'
+  description: 'GasBall adalah aplikasi untuk manajemen lapangan futsal'
 };
 
 export default function RootLayout({
