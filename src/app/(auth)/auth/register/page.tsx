@@ -1,3 +1,7 @@
-export default async function Login() {
+/**
+ * Register Page
+ * @returns The register page component.
+ */
+export default async function Register() {
   return <h1>Register</h1>;
 }
