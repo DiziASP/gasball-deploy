@@ -24,15 +24,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          'bg-background text-foreground font-sans',
+          'flex flex-col min-h-screen bg-[#BFDBFE] text-foreground font-sans',
           fontSans.variable
         )}
       >
-        <main className="min-h-screen antialiased flex flex-col min-w-full">
-          <Navigation />
+        <Navigation />
+        <main className="mantialiased flex flex-col min-w-full">
           {children}
-          <Footer />
         </main>
+        <Footer />
       </body>
     </html>
   );
