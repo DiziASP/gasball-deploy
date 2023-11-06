@@ -13,7 +13,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Brand } from './brand';
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -30,17 +31,15 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Navigation() {
   return (
-    <nav className="flex flex-row justify-between items-center shadow-md max-h-16 px-12">
-      <Link href="/" legacyBehavior passHref>
-        <p className="font-bold text-3xl">GasBall</p>
-      </Link>
+    <nav className="flex flex-row justify-between items-center shadow-md rounded-b-xl py-3 px-12 bg-background">
+      <Brand />
       <NavigationMenu>
         <NavigationMenuList>
           {/* Field */}
           <NavigationMenuItem>
             <NavigationMenuTrigger>Field</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="flex flex-col w-[240px] px-4">
+              <ul className="flex flex-col w-[240px] px-4 py-2">
                 {components.map((component) => (
                   <ListItem
                     key={component.title}
@@ -66,13 +65,12 @@ export function Navigation() {
           {/* Profile */}
           <NavigationMenuItem>
             <Link href="/profile" legacyBehavior passHref>
-              <Image
-                src="/assets/images/profile.jpeg"
-                alt="profile"
-                className="rounded-full ml-4"
-                width={40}
-                height={40}
-              />
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
