@@ -31,13 +31,15 @@ const components: { title: string; href: string; description: string }[] = [
 
 export function Navigation() {
   return (
-    <nav className="flex flex-row justify-between items-center shadow-md rounded-b-xl py-3 px-12 bg-background">
+    <nav className="flex flex-row justify-between items-center shadow-md py-3 px-12 bg-background">
       <Brand />
       <NavigationMenu>
         <NavigationMenuList>
           {/* Field */}
           <NavigationMenuItem>
-            <NavigationMenuTrigger>Field</NavigationMenuTrigger>
+            <Link href="/field">
+              <NavigationMenuTrigger>Field</NavigationMenuTrigger>
+            </Link>
             <NavigationMenuContent>
               <ul className="flex flex-col w-[240px] px-4 py-2">
                 {components.map((component) => (

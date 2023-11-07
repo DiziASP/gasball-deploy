@@ -62,7 +62,7 @@ const social: { media: string; href: string }[] = [
 
 export const Footer = () => {
   return (
-    <div className="mt-auto bg-background rounded-t-xl">
+    <div className="mt-auto bg-background">
       <div className="flex flex-col pt-12 pb-6 container">
         <div className="flex flex-row justify-evenly">
           <div className="space-y-2 max-w-[15rem]">
