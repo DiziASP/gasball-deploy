@@ -3,9 +3,9 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  const email = String(formData.get('email'));
-  const password = String(formData.get('password'));
+  const formData = await request.json();
+  const { email, password } = formData;
+
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -16,13 +16,16 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.json(
-      { message: `${error.name} - ${error.message}` },
+      {
+        status: error.name,
+        message: error.message
+      },
       { status: error.status }
     );
   }
 
   return NextResponse.json(
-    { message: 'Account succesfully logged in', data },
+    { status: 'success', message: 'Account succesfully logged in', data },
     { status: 200 }
   );
 }

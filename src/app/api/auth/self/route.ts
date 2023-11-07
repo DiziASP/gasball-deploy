@@ -12,13 +12,17 @@ export async function GET(request: Request) {
 
   if (!user) {
     return NextResponse.json(
-      { message: `No user is signed in` },
+      { status: 'error', message: `No user is signed in` },
       { status: 401 }
     );
   }
 
   return NextResponse.json(
-    { message: 'Current user in session succefully fetched', user },
+    {
+      status: 'success',
+      message: 'Current user in session succefully fetched',
+      user
+    },
     { status: 200 }
   );
 }
