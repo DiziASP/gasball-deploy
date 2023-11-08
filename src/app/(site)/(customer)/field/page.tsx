@@ -12,8 +12,10 @@ import {
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const lapanganPayload: {
+  id: string;
   name: string;
   syntheticGrass: boolean;
   Indoor: boolean;
@@ -22,6 +24,7 @@ const lapanganPayload: {
   available: boolean;
 }[] = [
   {
+    id: 'LP01',
     name: 'Lapangan 01',
     syntheticGrass: true,
     Indoor: true,
@@ -30,6 +33,7 @@ const lapanganPayload: {
     available: true
   },
   {
+    id: 'LP02',
     name: 'Lapangan 02',
     syntheticGrass: true,
     Indoor: false,
@@ -38,6 +42,7 @@ const lapanganPayload: {
     available: false
   },
   {
+    id: 'LP03',
     name: 'Lapangan 03',
     syntheticGrass: false,
     Indoor: true,
@@ -46,6 +51,7 @@ const lapanganPayload: {
     available: true
   },
   {
+    id: 'LP04',
     name: 'Lapangan 04',
     syntheticGrass: true,
     Indoor: true,
@@ -54,6 +60,7 @@ const lapanganPayload: {
     available: true
   },
   {
+    id: 'LP05',
     name: 'Lapangan 05',
     syntheticGrass: true,
     Indoor: false,
@@ -62,6 +69,7 @@ const lapanganPayload: {
     available: false
   },
   {
+    id: 'LP06',
     name: 'Lapangan 06',
     syntheticGrass: false,
     Indoor: true,
@@ -111,35 +119,40 @@ export default function FieldPage() {
             }
           })
           .map((lapangan) => (
-            <Card key={lapangan.name}>
-              <CardContent className="my-2 flex justify-center">
-                <Image
-                  src="/assets/images/field.jpg"
-                  alt=""
-                  width={480}
-                  height={480}
-                />
-              </CardContent>
-              <CardHeader>
-                <CardTitle>{lapangan.name}</CardTitle>
-                <CardDescription className="h-[4rem]">
-                  {lapangan.syntheticGrass
-                    ? 'Rumput Sintentis'
-                    : 'Rumput Alami'}{' '}
-                  {lapangan.Indoor ? '• Indoor' : '• Outdoor'}{' '}
-                  {lapangan.playerBench && '• Bench Pemain'}{' '}
-                  {lapangan.watcherBench && '• Bench Penonton'}
-                </CardDescription>
-              </CardHeader>
+            <Link key={lapangan.id} href={`/field/${lapangan.id}`}>
+              <Card
+                key={lapangan.name}
+                className="duration-150 scale-90 hover:scale-100 cursor-pointer"
+              >
+                <CardContent className="my-2 flex justify-center">
+                  <Image
+                    src="/assets/images/field.jpg"
+                    alt=""
+                    width={480}
+                    height={480}
+                  />
+                </CardContent>
+                <CardHeader>
+                  <CardTitle>{lapangan.name}</CardTitle>
+                  <CardDescription className="h-[4rem]">
+                    {lapangan.syntheticGrass
+                      ? 'Rumput Sintentis'
+                      : 'Rumput Alami'}{' '}
+                    {lapangan.Indoor ? '• Indoor' : '• Outdoor'}{' '}
+                    {lapangan.playerBench && '• Bench Pemain'}{' '}
+                    {lapangan.watcherBench && '• Bench Penonton'}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardFooter>
-                {lapangan.available ? (
-                  <Badge>Available</Badge>
-                ) : (
-                  <Badge variant="destructive">Unavailable</Badge>
-                )}
-              </CardFooter>
-            </Card>
+                <CardFooter>
+                  {lapangan.available ? (
+                    <Badge>Available</Badge>
+                  ) : (
+                    <Badge variant="destructive">Unavailable</Badge>
+                  )}
+                </CardFooter>
+              </Card>
+            </Link>
           ))}
       </div>
     </div>
