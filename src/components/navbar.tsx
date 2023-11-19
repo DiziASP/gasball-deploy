@@ -64,6 +64,15 @@ export function Navigation() {
             </Link>
           </NavigationMenuItem>
 
+          {/* Dashboard - jangan lupa diubah kalo udah bisa ambil state pengguna */}
+          <NavigationMenuItem>
+            <Link href="/dashboard" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Dashboard
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+
           {/* Profile */}
           <NavigationMenuItem>
             <Link href="/profile" legacyBehavior passHref>
