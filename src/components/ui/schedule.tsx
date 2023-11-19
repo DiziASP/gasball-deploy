@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useReducer } from 'react';
 
-
 interface Props {
   status: 'booked' | 'hover' | 'active' | 'default';
   className: any;
@@ -13,7 +12,12 @@ interface Props {
   removeFunction: () => void;
 }
 
-export const Schedule = ({ status, className, onClickFunction, removeFunction }: Props): JSX.Element => {
+export const Schedule = ({
+  status,
+  className,
+  onClickFunction,
+  removeFunction
+}: Props): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, {
     status: status || 'default'
   });
@@ -22,7 +26,7 @@ export const Schedule = ({ status, className, onClickFunction, removeFunction }:
     <div
       className={`w-[200px] h-[40px] rounded-xl shadow ${
         state.status === 'booked'
-          ? ('bg-red-400')
+          ? 'bg-red-400'
           : state.status === 'hover'
           ? 'bg-slate-200'
           : state.status === 'active'
@@ -37,8 +41,9 @@ export const Schedule = ({ status, className, onClickFunction, removeFunction }:
       }}
       onClick={() => {
         dispatch('click');
-        if (state.status === 'default' || state.status === 'hover'){
-          onClickFunction();}
+        if (state.status === 'default' || state.status === 'hover') {
+          onClickFunction();
+        }
         if (state.status === 'active') {
           removeFunction();
         }
@@ -91,5 +96,3 @@ function reducer(state: any, action: any) {
 Schedule.propTypes = {
   status: PropTypes.oneOf(['booked', 'hover', 'active', 'default'])
 };
-
-
