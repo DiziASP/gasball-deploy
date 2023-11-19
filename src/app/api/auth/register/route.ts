@@ -9,8 +9,20 @@ export async function POST(request: Request) {
   const { email, password, username, first_name, last_name, phone_number } =
     formData;
 
+  const role = formData.role || 'pelanggan';
+
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
+
+  console.log(
+    email,
+    password,
+    username,
+    first_name,
+    last_name,
+    phone_number,
+    role
+  );
 
   if (!username || !first_name || !last_name || !phone_number) {
     return NextResponse.json(
@@ -34,7 +46,8 @@ export async function POST(request: Request) {
         username,
         first_name,
         last_name,
-        phone_number
+        phone_number,
+        role
       }
     }
   });
