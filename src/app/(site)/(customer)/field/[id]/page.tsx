@@ -6,10 +6,18 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar, CalendarProps } from '@/components/ui/calendar';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { SchedulDay } from '@/components/ui/schedule-day';
+import { ScheduleDay } from '@/components/ui/schedule-day';
+import Reservation  from '@/components/ui/reservation';
+import React, { useState, useReducer } from 'react';
+
+
+type oneDaySlot = {
+  date: Date;
+  statusArray: boolean[];
+};
 
 type Field = {
   id: number;
@@ -23,11 +31,28 @@ type Field = {
   keeperID: number;
   keeperContact: string;
   address: string;
+  datePlots: oneDaySlot[];
 };
+
+const datePlotsForField: oneDaySlot[] = [
+  {
+    date : new Date(2023, 10, 19),
+    statusArray:[true, false, true,  false, false, true, false, true, false, true, false, true, false, true]
+  }, 
+  {
+    date : new Date(2023, 10, 20),
+    statusArray:[false, false, true,  false, false, false, false, true, false, true, false, true, true, true]
+  },
+  {
+    date : new Date(2023, 10, 21),
+    statusArray:[true, false, true,  false, false, true, false, true, false, true, false, false, false, false]
+  }
+  
+]
 
 const lapangan: Field = {
   id: 1,
-  name: 'Lapangan Gagas1',
+  name: 'Lapangan GACORRR',
   syntheticGrass: true,
   indoor: false,
   playerBench: true,
@@ -36,7 +61,8 @@ const lapangan: Field = {
   hourlyPrice: 50000,
   keeperID: 1,
   keeperContact: '08123222222',
-  address: 'Jl. Pelisiran Naura Valda Prameswari Warna Orange No. 19'
+  address: 'Jl. Pelisiran Naura Valda Prameswari Warna Orange No. 19',
+  datePlots: datePlotsForField,
 };
 
 type Reservation = {
@@ -45,7 +71,10 @@ type Reservation = {
   totalHours: number;
 };
 
+
+
 export default async function FieldDetail({
+  
   params
 }: {
   params: { id: string };
@@ -108,15 +137,15 @@ export default async function FieldDetail({
             </div>
             <div className="inline-flex flex-col items-end justify-end relative flex-1 grow">
               <div className="inline-flex flex-col items-end gap-[10px] relative flex-[0_0_auto]">
-                <p className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]">
-                  + Pukul 9.00 - 10.00
-                  <br />+ Pukul 10.00 - 11.00
+                <p id='totalhours' className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]">
+                <span id="hoursValue">0</span> Jam
+                  <br />
                 </p>
                 <div className="inline-flex items-center justify-end gap-[10px] relative flex-[0_0_auto]">
                   <div className="relative w-fit [font-family:'Inter-Bold',Helvetica] font-bold text-slate-900 text-[20px] tracking-[0] leading-[20px] whitespace-nowrap">
-                    Rp 300.000
+                    Rp <span id='priceValue'>0</span>{' '}
                   </div>
-                  <button className="inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border">
+                  <button id='bookButton' className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border">
                     <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
                       Book
                     </div>
@@ -126,50 +155,15 @@ export default async function FieldDetail({
             </div>
           </div>
         </div>
-        {/* <div className="-mt-60 pt-4 px-6 h-96">
-        <Card className='divide-x-black inline-flex object-bottom py-5 rounded-2xl'>
-          <div className='h-44 w-90'>
-            <CardHeader>
-                <h2>{lapangan.name}</h2>
-                <p>{lapangan.address}</p>
-                <p>
-                {lapangan.syntheticGrass
-                        ? 'Rumput Sintentis'
-                        : 'Rumput Alami'}{' '}
-                      {lapangan.indoor ? '• Indoor' : '• Outdoor'}{' '}
-                      {lapangan.playerBench && '• Bench Pemain'}{' '}
-                      {lapangan.watcherBench && '• Bench Penonton'}
-                </p>
-            </CardHeader>
-            <div className='bg-slate-50 hover:bg-slate-100 mx-6 mt-4 px-3 py-1 h-14 w-56 justify-around rounded-xl shadow'>
-              <a href="https://wa.me/6281355538777">
-              <CardDescription>
-                <b>Penjaga Lapangan</b><br />
-                Whatsapp: +62 821 2718 2717
-              </CardDescription>
-              </a>
-            </div>
-          </div>
-          <div className='flex flex-col justify-between w-44'>
-            <div>
-              <h3>Rp {lapangan.hourlyPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} /Jam</h3>
-            </div>
-            <div className=''>
-              <CardDescription>2 Jam</CardDescription>
-            <h4 className='right-0'>Rp {(lapangan.hourlyPrice*2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h4>
-              <Button className='ml-24'>Book</Button>
-            </div>
-          </div>
-        </Card>
-      </div> */}
       </div>
 
-      <div className="grid gap-5 h-full mb-5">
-        <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar>
-        <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
-          <SchedulDay></SchedulDay>
-        </div>
-      </div>
+      {/* <div className="grid gap-5 h-full mb-5"> */}
+        {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
+        <Reservation lapangan={lapangan}></Reservation>
+        {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
+          <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
+        </div> */}
+      {/* </div> */}
     </div>
   );
 }
