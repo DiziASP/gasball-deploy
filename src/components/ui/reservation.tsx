@@ -64,12 +64,12 @@ export const Reservation = (lapangan : Props): JSX.Element => {
       };
 
     return (
-      <div className="grid gap-0.5 h-full mb-5">
-        <Calendar selected={selectedDate} onDayClick={handleDayClick} className="bg-white rounded-2xl shadow-xl"/>
+      <div className="grid gap-2 h-full mb-5 w-fit">
+        <Calendar selected={selectedDate} onDayClick={handleDayClick} className="h-full w-full bg-white rounded-2xl shadow-xl"/>
         <div>
     
         </div>
-        <div className="overflow-y-scroll h-56 bg-white rounded-2xl shadow-xl no-scrollbar">
+        <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
           <ScheduleDay key={selectedStatusArray.toString()} price={lapangan.lapangan.hourlyPrice} statusArray={selectedStatusArray} totalHours={0}></ScheduleDay>
         </div>
       </div>
