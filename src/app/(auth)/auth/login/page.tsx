@@ -12,9 +12,9 @@ import Link from "next/link"
  */
 export default async function Login() {
   return (
-    <div className="mx-40 my-20 rounded-[40px] overflow-hidden">
-      <div className="flex flex-row items-center justify-center bg-white">
-        <div className="flex flex-col items-center justify-center w-full">
+    <div className="flex w-full px-40 py-20 items-center justify-center">
+      <div className="flex flex-wrap-reverse rounded-[40px] flex-row items-center justify-center bg-white h-full overflow-hidden">
+        <div className="flex flex-col py-20 px-40 items-center justify-center w-full max-w-[625px]">
           {/* Brand */}
           <Brand />
           <h4>Kick Off Your Fun with Us!</h4>
@@ -54,10 +54,8 @@ export default async function Login() {
             </Link>
           </div>
         </div>
-        <div className="m-10">
-          <div className="rounded-[20px] overflow-hidden">
-            <Image src='/assets/images/login-img.jpg' alt='' width={1000} height={954}/>
-          </div>
+        <div className="grow rounded-[20px] max-w-[800px] m-10 overflow-hidden">
+          <img className="w-full h-full object-cover" src='/assets/images/login-img.jpg' alt=''/>
         </div>
       </div>
     </div>
