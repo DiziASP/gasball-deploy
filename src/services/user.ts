@@ -1,16 +1,17 @@
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
+import { Payload } from '../../types/database.types';
 
 export interface UserUpdatePayload {
-  username: String;
-  first_name: String;
-  last_name: String;
-  phone_number: String;
+  username?: String | null;
+  first_name?: String | null;
+  last_name?: String | null;
+  phone_number?: String | null;
 }
 
 export const updateUser = async (
-  userUpdatePayload: UserUpdatePayload,
-  id: string | undefined
+  userUpdatePayload: Payload<"users">,
+  id: string
 ) => {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);

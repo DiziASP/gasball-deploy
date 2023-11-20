@@ -1,17 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
-
-export interface FieldPayload {
-  id?: string | undefined;
-  keeperId?: string | undefined;
-  name: string;
-  pricePerHour: number;
-  syntheticGrass: boolean;
-  indoor: boolean;
-  playerBench: boolean;
-  watcherBench: boolean;
-  available: boolean;
-}
+import { DbResult, Payload, Tables } from '../../types/database.types';
 
 export interface FieldFilter {
   name?: string | null;
@@ -24,7 +13,7 @@ export interface FieldFilter {
   available?: boolean | null;
 }
 
-export const createField = async (fieldPayload: FieldPayload) => {
+export const createField = async (fieldPayload: Payload<"fields">) => {
   const supabase = createClient(cookies());
 
   const { data, error } = await supabase
@@ -35,10 +24,7 @@ export const createField = async (fieldPayload: FieldPayload) => {
   return { data, error };
 };
 
-export const updateField = async (
-  id: string | undefined,
-  fieldPayload: FieldPayload
-) => {
+export const updateField = async (id: string, fieldPayload: Payload<'fields'>) => {
   const supabase = createClient(cookies());
 
   const { data, error } = await supabase
@@ -50,13 +36,13 @@ export const updateField = async (
   return { data, error };
 };
 
-export const deleteField = async (id: string | undefined) => {
+export const deleteField = async (id: string) => {
   const supabase = createClient(cookies());
   const { error } = await supabase.from('fields').delete().eq('id', id);
   return { error };
 };
 
-export const getFieldById = async (id: string | undefined) => {
+export const getFieldById = async (id: string) => {
   const supabase = createClient(cookies());
 
   const { data, error } = await supabase
