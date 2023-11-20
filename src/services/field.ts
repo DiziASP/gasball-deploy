@@ -13,7 +13,7 @@ export interface FieldFilter {
   available?: boolean | null;
 }
 
-export const createField = async (fieldPayload: Payload<"fields">) => {
+export const createField = async (fieldPayload: Payload<'fields'>) => {
   const supabase = createClient(cookies());
 
   const { data, error } = await supabase
@@ -24,7 +24,10 @@ export const createField = async (fieldPayload: Payload<"fields">) => {
   return { data, error };
 };
 
-export const updateField = async (id: string, fieldPayload: Payload<'fields'>) => {
+export const updateField = async (
+  id: string,
+  fieldPayload: Payload<'fields'>
+) => {
   const supabase = createClient(cookies());
 
   const { data, error } = await supabase
@@ -48,7 +51,8 @@ export const getFieldById = async (id: string) => {
   const { data, error } = await supabase
     .from('fields')
     .select('*')
-    .eq('id', id);
+    .eq('id', id)
+    .single();
 
   return { data, error };
 };

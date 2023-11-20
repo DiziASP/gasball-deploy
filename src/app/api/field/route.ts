@@ -2,15 +2,15 @@
 
 import {
   FieldFilter,
-  FieldPayload,
   createField,
   getFields
 } from '@/services/field';
 import { NextRequest, NextResponse } from 'next/server';
+import { Payload } from '../../../../types/database.types';
 
 // Creates a field
 export async function POST(request: Request) {
-  const fieldPayload: FieldPayload = await request.json();
+  const fieldPayload: Payload<"fields"> = await request.json();
 
   if (
     !fieldPayload.keeperId ||

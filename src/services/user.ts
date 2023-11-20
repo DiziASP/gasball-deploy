@@ -10,7 +10,7 @@ export interface UserUpdatePayload {
 }
 
 export const updateUser = async (
-  userUpdatePayload: Payload<"users">,
+  userUpdatePayload: Payload<'users'>,
   id: string
 ) => {
   const cookieStore = cookies();
