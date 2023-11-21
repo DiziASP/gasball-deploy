@@ -1,56 +1,68 @@
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { Payload } from '../../../../../types/database.types';
+import { registerAndCreateAccount } from '@/services/auth';
 
-export async function POST(request: Request) {
+// POST /api/auth/register
+// request body: {
+//   "email": "admin@gmail.com",
+//   "password": "adminadmin",
+//   "username": "admin",
+//   "full_name": "Admin",
+//   "phone_number": "081593201831",
+//   "role": "admin"
+// }
+// status: {
+//   success: 200,
+//   bad request: 400; One or many of the body parameters are not present
+// }
+export async function POST(request: NextRequest) {
+  const bodyRequest = await request.json();
   const requestUrl = new URL(request.url);
-  const formData = await request.json();
 
-  const { email, password, username, first_name, last_name, phone_number } =
-    formData;
+  const accountPayload: Payload<'users'> = bodyRequest;
+  const { password } = bodyRequest;
 
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  if (!username || !first_name || !last_name || !phone_number) {
+  // Check for body parameters
+  if (
+    !accountPayload.email ||
+    !accountPayload.full_name ||
+    !accountPayload.phone_number ||
+    !accountPayload.role ||
+    !accountPayload.username ||
+    !password
+  ) {
     return NextResponse.json(
       {
-        status: 'FieldError',
-        message:
-          'Request MUST include email, password, username, first_name, last_name, phone_name'
+        status: 'error',
+        message: 'Bad request! All body parameters should be present'
       },
-      { status: 422 }
+      { status: 400 }
     );
   }
 
-  // Add new row for a user to auth.users table. Trigger will run to add the newly created row from auth.users to public.users
-  // TODO: create triggers for update
-  const { data, error } = await supabase.auth.signUp({
-    email,
+  // execute register
+  const { data, error } = await registerAndCreateAccount(
+    accountPayload,
     password,
-    options: {
-      emailRedirectTo: `${requestUrl.origin}/api/auth/callback`,
-      data: {
-        username,
-        first_name,
-        last_name,
-        phone_number
-      }
-    }
-  });
+    requestUrl
+  );
 
+  // Check for supabase errors
   if (error) {
     return NextResponse.json(
       {
-        status: error.name,
+        status: 'error',
         message: error.message
       },
       { status: error.status }
     );
   }
 
+  // successful return
   return NextResponse.json(
-    { status: 'success', message: 'Account succesfully created', data },
+    { status: 'success', message: 'Account created succesfully', data: data },
     { status: 200 }
   );
 }

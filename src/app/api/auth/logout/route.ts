@@ -1,25 +1,29 @@
-import { createClient } from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { signOut } from '@/services/auth';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+// POST /api/auth/logout
+// request body: {}
+// status: {
+//   success: 200
+// }
+export async function POST(request: NextRequest) {
+  // execute logout
+  const { error } = await signOut();
 
-  const { error } = await supabase.auth.signOut();
-
+  // Check for supabase errors
   if (error) {
     return NextResponse.json(
       {
-        status: error.name,
+        status: 'error',
         message: error.message
       },
       { status: error.status }
     );
   }
 
+  // successful return
   return NextResponse.json(
-    { message: 'User succesfully logged out' },
+    { status: 'success', message: 'Account logged out succesfully' },
     { status: 200 }
   );
 }
