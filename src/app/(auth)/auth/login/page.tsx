@@ -1,4 +1,4 @@
-import Image from "next/image"
+'use client';
 import { Brand } from "@/components/brand"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
@@ -6,27 +6,52 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 /**
  * Login Page
  * @returns The login page component.
- */
-export default async function Login() {
+*/
+
+export default function Login() {
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  })
+  const [failmsg, setFailmsg] = useState("Gagal masuk, coba periksa kembali email dan password Anda!")
+  const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  const router = useRouter();
+  
   return (
     <div className="flex w-full px-40 py-20 items-center justify-center">
       <div className="flex flex-wrap-reverse rounded-[40px] flex-row items-center justify-center bg-white h-full overflow-hidden">
         <div className="flex flex-col py-20 px-40 items-center justify-center w-full max-w-[625px]">
           {/* Brand */}
           <Brand />
-          <h4>Kick Off Your Fun with Us!</h4>
-          <div className="grid w-full max-w-sm items-center gap-4 m-10">
+          <h4 className="text-center">Kick Off Your Fun with Us!</h4>
+          <div className="grid w-full max-w-sm items-center gap-4 m-10 py-10">
             {/* Form */}
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Email</Label>
-              <Input type="email" placeholder="Email" />
+              <Input 
+                id="email"
+                type="email" 
+                placeholder="Email"
+                value={user.email}
+                onChange={(e) => setUser({...user, email: e.target.value})} 
+              />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Password</Label>
-              <Input type="password" placeholder="Password" />
+              <Input 
+                type="password" 
+                placeholder="Password" 
+                value={user.password}
+                onChange={(e) => setUser({...user, password: e.target.value})}
+              />
             </div>
             {/* Check box and forget password */}
             <div className="flex justify-between items-center">
@@ -35,16 +60,43 @@ export default async function Login() {
                 <Label> Remember me</Label>
               </div>
               <div>
-                <Link href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <Link href="https://wa.me/6281232461738?text=Halo%20gann%20pacar%20bagas%2C%20password%20saya%20lupa%20gmn%20yh%20gan" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Forget password?
                 </Link>
               </div>
             </div>
           </div>
+          {failed ? <div className="rounded-[5px] px-5 py-2 bg-red-100 w-full">
+            <Label className="text-red-800">{failmsg}</Label>
+          </div> : <></>}
           {/* Button */}
           <div className="grid w-full max-w-sm items-center gap-4 m-5">
-            <Button type="submit">Login</Button>
-            <Button type="submit" variant="secondary">Login with Google</Button>
+            <Button type="submit" onClick={async () => {
+              try {
+                setLoading(true);
+                setFailed(false);
+                const res = await fetch("http://localhost:3000/api/auth/login", {
+                  method: "POST",
+                  body: JSON.stringify(user),
+                  headers: {
+                    "Content-Type": "application/json",
+                  }
+                });
+                
+                if (res.ok) {
+                  router.push("/");
+                } else {
+                  setLoading(false);
+                  setFailmsg("Gagal masuk, coba periksa kembali email dan password Anda!");
+                  setFailed(true)
+                }
+              } catch (error) {
+                console.error('Error: ', error);
+                setLoading(false)
+                setFailmsg("Sistem sedang error! Coba beberapa saat lagi");
+                setFailed(true)
+              }
+            }}>{loading ? "Loading" : "Login"}</Button>
           </div>
           {/* Sign up */}
           <div className="flex items-center gap-1.5 mt-20">
