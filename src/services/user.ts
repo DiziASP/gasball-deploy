@@ -20,7 +20,10 @@ export const getUserById = async (id: string | undefined) => {
   return { data, error };
 };
 
-export const updateUser = async (userPayload: Payload<'users'>, id: string | undefined) => {
+export const updateUser = async (
+  userPayload: Payload<'users'>,
+  id: string | undefined
+) => {
   const supabase = createClient(cookies());
   const query = supabase
     .from('users')
