@@ -9,9 +9,7 @@ import {
 
 async function getKeeperFields() {}
 
-async function getKeeperFieldReservations() {
-    
-}
+async function getKeeperFieldReservations() {}
 
 export default async function KeeperHistory() {
   return (
