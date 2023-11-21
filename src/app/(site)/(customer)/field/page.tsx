@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const lapanganPayload: {
@@ -79,16 +79,47 @@ const lapanganPayload: {
   }
 ];
 
+async function getAllFieldData() {
+  try {
+    const origin = 'http://localhost:3000';
+    const res = await fetch(`${origin}/api/field`);
+    const data = await res.json();
+
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
 /**
  * Halaman Pencarian Lapangan
  * @returns The search field page component.
  */
 export default function FieldPage() {
   const [searchVal, setSearchVal] = useState('');
+  const [data, setData] = useState<
+    {
+      id: string;
+      name: string;
+      syntheticGrass: boolean;
+      Indoor: boolean;
+      playerBench: boolean;
+      watcherBench: boolean;
+      available: boolean;
+    }[]
+  >([]);
 
   const handleSearch = (val: string) => {
     setSearchVal(val);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getAllFieldData();
+      setData(res['data']);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-white flex-1 my-12 rounded-3xl px-64 py-[72px]">
@@ -96,7 +127,7 @@ export default function FieldPage() {
 
       {/* Cards */}
       <div className="grid grid-cols-3 justify-center my-8 gap-8">
-        {lapanganPayload
+        {data
           .filter((val) => {
             if (searchVal === '') {
               return val;

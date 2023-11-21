@@ -95,7 +95,7 @@ const datePlotsForField: oneDaySlot[] = [
 
 const lapangan: Field = {
   id: 1,
-  name: 'Lapangan GACOR',
+  name: 'Lapangan GACORRR',
   syntheticGrass: true,
   indoor: false,
   playerBench: true,
@@ -205,13 +205,14 @@ export default async function FieldDetail({
         </div>
       </div>
 
-      {/* <div className="grid gap-5 h-full mb-5"> */}
-      {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
+      {/* {/* <div className="grid gap-5 h-full mb-5"> */}
+      {/* {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
       <Reservation lapangan={lapangan}></Reservation>
-      {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
-          <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
+      {/* <Reservation lapangan={lapangan}></Reservation>
+        {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
+          <ScheduleeDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0} price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleeDay>
         </div> */}
-      {/* </div> */}
+      {/* {/* </div> */}
     </div>
   );
 }

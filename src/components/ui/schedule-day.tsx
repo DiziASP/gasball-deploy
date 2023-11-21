@@ -79,7 +79,6 @@ export const ScheduleDay = ({ statusArray, price }: Props): JSX.Element => {
               minOneHour();
             }}
           />
-
           <div className="flex items-center justify-end gap-[8px] relative self-stretch w-full flex-[0_0_auto] mt-[-4px]">
             <div className="relative w-fit mt-[-1.00px] font-detail font-[number:var(--detail-font-weight)] text-slate-500 text-center tracking-[var(--detail-letter-spacing)] leading-[var(--detail-line-height)] whitespace-nowrap [font-style:var(--detail-font-style)]">
               {time}
