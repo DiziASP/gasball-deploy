@@ -159,16 +159,16 @@ async function getAllReservation() {
 export default function SalesDashboard() {
   const [data, setData] = useState<
     {
-      id: string,
-      fieldId: string,
-      customerId: string,
-      customerName: string,
-      orderDate: string,
-      hourRange: number,
-      totalPrice: number,
-      paidStatus: boolean,
-      created_at: string,
-      updated_at: string
+      id: string;
+      fieldId: string;
+      customerId: string;
+      customerName: string;
+      orderDate: string;
+      hourRange: number;
+      totalPrice: number;
+      paidStatus: boolean;
+      created_at: string;
+      updated_at: string;
     }[]
   >([]);
 
@@ -177,7 +177,7 @@ export default function SalesDashboard() {
       setData(data);
     });
   }, []);
-  
+
   return (
     <div className="flex flex-col py-6 gap-6">
       <h1>Sales Dashboard</h1>
@@ -196,7 +196,7 @@ export default function SalesDashboard() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" width={300}/>
+            <XAxis dataKey="name" width={300} />
             <YAxis
               tickFormatter={(value) =>
                 new Intl.NumberFormat('id', {
@@ -206,13 +206,14 @@ export default function SalesDashboard() {
               }
               width={120}
             />
-            <Tooltip formatter={
-              (value: number) =>
+            <Tooltip
+              formatter={(value: number) =>
                 new Intl.NumberFormat('id', {
                   style: 'currency',
                   currency: 'IDR'
                 }).format(value)
-            }/>
+              }
+            />
             <Legend />
             <Bar dataKey="total" stackId="a" fill="#8884d8" />
           </BarChart>
@@ -250,7 +251,9 @@ export default function SalesDashboard() {
           <TableBody>
             {data.map((invoice) => (
               <TableRow key={invoice.customerId}>
-                <TableCell className="font-medium">{invoice.customerId}</TableCell>
+                <TableCell className="font-medium">
+                  {invoice.customerId}
+                </TableCell>
                 <TableCell>{invoice.orderDate}</TableCell>
                 <TableCell>{invoice.fieldId}</TableCell>
                 <TableCell>{invoice.customerId}</TableCell>
