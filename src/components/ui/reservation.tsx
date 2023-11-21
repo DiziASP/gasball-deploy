@@ -18,11 +18,27 @@ type Field = {
   playerBench: boolean;
   watcherBench: boolean;
   available: boolean;
-  hourlyPrice: number;
-  keeperID: number;
-  keeperContact: string;
-  address: string;
+  pricePerHour: number;
+  users: {
+    id: string;
+    full_name: string;
+    phone_number: string;
+  };
+  location: string;
   datePlots: oneDaySlot[];
+};
+
+type Reservation = {
+  id: string;
+  fieldId: string;
+  customerId: string;
+  customerName: string;
+  orderDate: string;
+  hourRange: number;
+  totalPrice: number;
+  paidStatus: boolean;
+  created_at: string;
+  updated_at: string;
 };
 
 interface Props {
@@ -66,6 +82,9 @@ export const Reservation = (lapangan: Props): JSX.Element => {
     // Lakukan operasi lain yang diperlukan saat tanggal dipilih atau tidak dipilih
   };
 
+  
+
+
   return (
     <div className="grid gap-2 h-full mb-5 w-fit">
       <Calendar
@@ -77,10 +96,11 @@ export const Reservation = (lapangan: Props): JSX.Element => {
       <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
           key={selectedStatusArray.toString()}
-          price={lapangan.lapangan.hourlyPrice}
+          price={lapangan.lapangan.pricePerHour}
           statusArray={selectedStatusArray}
           totalHours={0}
         ></ScheduleDay>
+        <p></p>
       </div>
     </div>
   );

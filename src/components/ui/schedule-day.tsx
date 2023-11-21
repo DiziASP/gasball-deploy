@@ -36,6 +36,12 @@ function checkTotalHours(totalHours: number, price: number) {
 
 export const ScheduleDay = ({ statusArray, price }: Props): JSX.Element => {
   const scheduleTimes = [
+    '01.00',
+    '02.00',
+    '03.00',
+    '04.00',
+    '05.00',
+    '06.00',
     '07.00',
     '08.00',
     '09.00',
@@ -50,7 +56,9 @@ export const ScheduleDay = ({ statusArray, price }: Props): JSX.Element => {
     '18.00',
     '19.00',
     '20.00',
-    '21.00'
+    '21.00',
+    '22.00',
+    '23.00'
   ];
   const [totalHours, setTotalHours] = React.useState(0);
 
@@ -90,7 +98,8 @@ export const ScheduleDay = ({ statusArray, price }: Props): JSX.Element => {
   }
 
   return (
-    <div className="flex flex-col w-[300px] items-end px-[10px] pt-[15px] p-[4px] relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
+    <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
+      {statusArray.toString()}
       {scheduleTimes.map((time, index) => (
         <React.Fragment key={index}>
           <Schedule
