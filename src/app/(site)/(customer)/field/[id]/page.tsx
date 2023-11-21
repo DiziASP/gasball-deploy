@@ -10,9 +10,8 @@ import { Calendar, CalendarProps } from '@/components/ui/calendar';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScheduleDay } from '@/components/ui/schedule-day';
-import Reservation  from '@/components/ui/reservation';
+import Reservation from '@/components/ui/reservation';
 import React, { useState, useReducer } from 'react';
-
 
 type oneDaySlot = {
   date: Date;
@@ -36,19 +35,63 @@ type Field = {
 
 const datePlotsForField: oneDaySlot[] = [
   {
-    date : new Date(2023, 10, 19),
-    statusArray:[true, false, true,  false, false, true, false, true, false, true, false, true, false, true]
-  }, 
-  {
-    date : new Date(2023, 10, 20),
-    statusArray:[false, false, true,  false, false, false, false, true, false, true, false, true, true, true]
+    date: new Date(2023, 10, 19),
+    statusArray: [
+      true,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true
+    ]
   },
   {
-    date : new Date(2023, 10, 21),
-    statusArray:[true, false, true,  false, false, true, false, true, false, true, false, false, false, false]
+    date: new Date(2023, 10, 20),
+    statusArray: [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  {
+    date: new Date(2023, 10, 21),
+    statusArray: [
+      true,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
   }
-  
-]
+];
 
 const lapangan: Field = {
   id: 1,
@@ -62,7 +105,7 @@ const lapangan: Field = {
   keeperID: 1,
   keeperContact: '08123222222',
   address: 'Jl. Pelisiran Naura Valda Prameswari Warna Orange No. 19',
-  datePlots: datePlotsForField,
+  datePlots: datePlotsForField
 };
 
 type Reservation = {
@@ -71,10 +114,7 @@ type Reservation = {
   totalHours: number;
 };
 
-
-
 export default async function FieldDetail({
-  
   params
 }: {
   params: { id: string };
@@ -135,15 +175,21 @@ export default async function FieldDetail({
             </div>
             <div className="inline-flex flex-col items-end justify-end relative flex-1 grow">
               <div className="inline-flex flex-col items-end gap-[10px] relative flex-[0_0_auto]">
-                <p id='totalhours' className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]">
-                <span id="hoursValue">0</span> Jam
+                <p
+                  id="totalhours"
+                  className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]"
+                >
+                  <span id="hoursValue">0</span> Jam
                   <br />
                 </p>
                 <div className="inline-flex items-center justify-end gap-[10px] relative flex-[0_0_auto]">
                   <div className="relative w-fit [font-family:'Inter-Bold',Helvetica] font-bold text-slate-900 text-[20px] tracking-[0] leading-[20px] whitespace-nowrap">
-                    Rp <span id='priceValue'>0</span>{' '}
+                    Rp <span id="priceValue">0</span>{' '}
                   </div>
-                  <button id='bookButton' className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border">
+                  <button
+                    id="bookButton"
+                    className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
+                  >
                     <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
                       Book
                     </div>
@@ -156,9 +202,9 @@ export default async function FieldDetail({
       </div>
 
       {/* <div className="grid gap-5 h-full mb-5"> */}
-        {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
-        <Reservation lapangan={lapangan}></Reservation>
-        {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
+      {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
+      <Reservation lapangan={lapangan}></Reservation>
+      {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
           <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
         </div> */}
       {/* </div> */}
