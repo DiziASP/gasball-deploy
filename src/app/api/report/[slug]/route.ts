@@ -29,13 +29,13 @@ const getYearlyReport = async (year: number) => {
 
     let total = 0;
     monthlyTransactions.data?.forEach((monthData) => {
-        total += Number(monthData.totalPrice)
-    })
+      total += Number(monthData.totalPrice);
+    });
 
     yearlyTransactions.push({
-        name: months[month],
-        amt: monthlyTransactions.data?.length,
-        total
+      name: months[month],
+      amt: monthlyTransactions.data?.length,
+      total
     });
   }
 
