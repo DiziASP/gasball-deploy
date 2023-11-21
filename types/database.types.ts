@@ -27,38 +27,44 @@ export interface Database {
       fields: {
         Row: {
           available: boolean | null;
-          created_at: string;
+          created_at: string | null;
           id: string;
           indoor: boolean | null;
           keeperId: string | null;
+          location: string | null;
           name: string | null;
           playerBench: boolean | null;
           pricePerHour: number | null;
           syntheticGrass: boolean | null;
+          updated_at: string | null;
           watcherBench: boolean | null;
         };
         Insert: {
           available?: boolean | null;
-          created_at?: string;
+          created_at?: string | null;
           id?: string;
           indoor?: boolean | null;
           keeperId?: string | null;
+          location?: string | null;
           name?: string | null;
           playerBench?: boolean | null;
           pricePerHour?: number | null;
           syntheticGrass?: boolean | null;
+          updated_at?: string | null;
           watcherBench?: boolean | null;
         };
         Update: {
           available?: boolean | null;
-          created_at?: string;
+          created_at?: string | null;
           id?: string;
           indoor?: boolean | null;
           keeperId?: string | null;
+          location?: string | null;
           name?: string | null;
           playerBench?: boolean | null;
           pricePerHour?: number | null;
           syntheticGrass?: boolean | null;
+          updated_at?: string | null;
           watcherBench?: boolean | null;
         };
         Relationships: [
@@ -71,85 +77,42 @@ export interface Database {
           }
         ];
       };
-      invoices: {
-        Row: {
-          created_at: string;
-          customerId: string | null;
-          fieldId: string | null;
-          id: string;
-          reservationId: string | null;
-          totalPrice: number | null;
-        };
-        Insert: {
-          created_at?: string;
-          customerId?: string | null;
-          fieldId?: string | null;
-          id?: string;
-          reservationId?: string | null;
-          totalPrice?: number | null;
-        };
-        Update: {
-          created_at?: string;
-          customerId?: string | null;
-          fieldId?: string | null;
-          id?: string;
-          reservationId?: string | null;
-          totalPrice?: number | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'invoices_customerId_fkey';
-            columns: ['customerId'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'invoices_fieldId_fkey';
-            columns: ['fieldId'];
-            isOneToOne: false;
-            referencedRelation: 'fields';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'invoices_reservationId_fkey';
-            columns: ['reservationId'];
-            isOneToOne: false;
-            referencedRelation: 'reservations';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
       reservations: {
         Row: {
-          created_at: string;
+          created_at: string | null;
           customerId: string | null;
           customerName: string | null;
-          date: string | null;
           fieldId: string | null;
           hourRange: number | null;
           id: string;
+          orderDate: string | null;
           paidStatus: boolean | null;
+          totalPrice: number | null;
+          updated_at: string | null;
         };
         Insert: {
-          created_at?: string;
+          created_at?: string | null;
           customerId?: string | null;
           customerName?: string | null;
-          date?: string | null;
           fieldId?: string | null;
           hourRange?: number | null;
           id?: string;
+          orderDate?: string | null;
           paidStatus?: boolean | null;
+          totalPrice?: number | null;
+          updated_at?: string | null;
         };
         Update: {
-          created_at?: string;
+          created_at?: string | null;
           customerId?: string | null;
           customerName?: string | null;
-          date?: string | null;
           fieldId?: string | null;
           hourRange?: number | null;
           id?: string;
+          orderDate?: string | null;
           paidStatus?: boolean | null;
+          totalPrice?: number | null;
+          updated_at?: string | null;
         };
         Relationships: [
           {
@@ -172,9 +135,8 @@ export interface Database {
         Row: {
           created_at: string | null;
           email: string | null;
-          first_name: string | null;
+          full_name: string | null;
           id: string;
-          last_name: string | null;
           phone_number: string | null;
           role: Database['public']['Enums']['user_role'] | null;
           updated_at: string | null;
@@ -183,9 +145,8 @@ export interface Database {
         Insert: {
           created_at?: string | null;
           email?: string | null;
-          first_name?: string | null;
+          full_name?: string | null;
           id?: string;
-          last_name?: string | null;
           phone_number?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
           updated_at?: string | null;
@@ -194,23 +155,14 @@ export interface Database {
         Update: {
           created_at?: string | null;
           email?: string | null;
-          first_name?: string | null;
+          full_name?: string | null;
           id?: string;
-          last_name?: string | null;
           phone_number?: string | null;
           role?: Database['public']['Enums']['user_role'] | null;
           updated_at?: string | null;
           username?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'users_id_fkey';
-            columns: ['id'];
-            isOneToOne: true;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          }
-        ];
+        Relationships: [];
       };
     };
     Views: {
