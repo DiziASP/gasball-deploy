@@ -102,24 +102,22 @@ export default function SalesDashboard() {
       <h1>Sales Dashboard</h1>
 
       {/* Select Year */}
-      <Select onValueChange={(value) => {
-        setYear(Number(value))
-      }} defaultValue={String(year)}>
-        <SelectTrigger className='w-1/4'>
+      <Select
+        onValueChange={(value) => {
+          setYear(Number(value));
+        }}
+        defaultValue={String(year)}
+      >
+        <SelectTrigger className="w-1/4">
           <SelectValue placeholder="Tahun" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {
-              [2023, 2022, 2021].map((year) => (
-                <SelectItem
-                  key={year}
-                  value={String(year)}
-                >
-                  {year}
-                </SelectItem>
-              ))
-            }
+            {[2023, 2022, 2021].map((year) => (
+              <SelectItem key={year} value={String(year)}>
+                {year}
+              </SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -147,7 +145,7 @@ export default function SalesDashboard() {
               }
               width={120}
             />
-            <Tooltip/>
+            <Tooltip />
             <Legend />
             <Bar dataKey="total" stackId="a" fill="#8884d8" />
 
