@@ -9,7 +9,7 @@ import {
   TableRow
 } from '@/components/ui/table';
 import React from 'react';
-import Dropdown from '@/components/ui/dropdown-menu';
+import Dropdown from '@/components/ui/dropdown';
 import Link from 'next/link';
 
 const fields = [

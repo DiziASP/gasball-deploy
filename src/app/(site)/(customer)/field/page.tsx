@@ -115,7 +115,7 @@ export default function FieldPage() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllFieldData();
-      setData(res['data']);
+      setData(res['data']['field']);
     };
 
     fetchData();
