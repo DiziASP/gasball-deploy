@@ -2,9 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { Payload } from '../../types/database.types';
 import { cookies } from 'next/headers';
 
-
-
-
 export const createReservation = async (
   reservationPayload: Payload<'reservations'>
 ) => {

@@ -96,9 +96,10 @@ export async function GET(request: NextRequest) {
         : null
   };
 
-  const { data, error } = keeperId === null
-    ? await getFields(filters)
-    : await getFieldByKeeperId(keeperId);
+  const { data, error } =
+    keeperId === null
+      ? await getFields(filters)
+      : await getFieldByKeeperId(keeperId);
   if (error) {
     return NextResponse.json(
       {
