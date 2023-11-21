@@ -29,8 +29,8 @@ function extractDate(date: string) {
 }
 
 function extractTime(date: string, range: number) {
-  const startTime = new Date(date).getHours(); 
-  const endTime = new Date(date).getHours()+range;
+  const startTime = new Date(date).getHours();
+  const endTime = new Date(date).getHours() + range;
   return `${startTime}.00 - ${endTime}.00`;
 }
 
