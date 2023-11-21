@@ -18,7 +18,8 @@ export const createField = async (fieldPayload: Payload<'fields'>) => {
   const query = supabase
     .from('fields')
     .insert([{ ...fieldPayload }])
-    .select();
+    .select()
+    .single();
   const { data, error } = await query;
   return { data, error };
 };
@@ -32,6 +33,7 @@ export const updateField = async (
     .from('fields')
     .update({ ...fieldPayload })
     .eq('id', id as string)
+    .select()
     .select();
   const { data, error } = await query;
   return { data, error };

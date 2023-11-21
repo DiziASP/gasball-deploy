@@ -17,7 +17,8 @@ export const createReservation = async (
   const query = supabase
     .from('reservations')
     .insert([{ ...reservationPayload }])
-    .select();
+    .select()
+    .single();
   const { data, error } = await query;
   return { data, error };
 };

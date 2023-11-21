@@ -17,7 +17,11 @@ export async function GET(request: NextRequest) {
     );
   }
   return NextResponse.json(
-    { status: 'success', message: 'Reservations succesfully fetched', data },
+    {
+      status: 'success',
+      message: 'Reservations succesfully fetched',
+      data: { reservation: data }
+    },
     { status: 200 }
   );
 }
