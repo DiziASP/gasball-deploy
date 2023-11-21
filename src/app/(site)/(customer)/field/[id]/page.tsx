@@ -122,19 +122,15 @@ export default async function FieldDetail({
   return (
     <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
       <div>
-        <Image
+        <img
           src="/assets/images/field.jpg"
           alt=""
-          width={840}
-          height={560}
-          className="z-1 h-[540px] object-cover rounded-3xl shadow-2xl"
+          className="z-1 w-full h-full object-cover rounded-3xl shadow-2xl"
         />
-        <div className="flex w-[805px] gap-[20px] p-[25px] relative bg-white rounded-[21px] -mt-60 pt-4 px-4 max-h-56 ml-5">
-          <div className="flex flex-col w-[444px] items-start  relative">
-            <div className="relative w-fit mt-[-1.00px] font-h-4 font-[number:var(--h-8-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
-              <b className="text-2xl">
-                {lapangan.name} {params.id}
-              </b>
+        <div className="flex w-148 gap-2 p-4 relative bg-white rounded-[21px] -mt-60 pt-4 px-4 max-h-56 mx-6">
+          <div className="flex flex-col items-start  relative">
+            <div className="relative w-fit -mt-1 font-h-4 font-[number:var(--h-8-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
+              <b className="text-2xl">{lapangan.name}</b>
             </div>
             <p className="relative self-stretch font-body font-[number:var(--body-font-weight)] text-slate-900 text-[length:var(--body-font-size)] tracking-[var(--body-letter-spacing)] leading-[var(--body-line-height)] [font-style:var(--body-font-style)]">
               {lapangan.address}
@@ -148,13 +144,13 @@ export default async function FieldDetail({
             </p>
 
             <a href="https://wa.me/6281355538777">
-              <div className="inline-flex items-start gap-[15px] p-[8px] relative flex-[0_0_auto] bg-slate-100 hover:bg-slate-200 rounded-2xl mt-3">
+              <div className="inline-flex items-start gap-3 p-2 relative flex-[0_0_auto] bg-slate-100 hover:bg-slate-200 rounded-2xl mt-3">
                 <Avatar>
                   <AvatarImage src="https://github.com/shadcn.png" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="inline-flex flex-col items-start gap-[0px] relative flex-[0_0_auto]">
-                  <div className="font-semibold relative w-fit mt-[-1.00px] font-small  text-[#000000] text-[length:var(--small-font-size)] tracking-[var(--small-letter-spacing)] leading-[var(--small-line-height)] whitespace-nowrap [font-style:var(--small-font-style)]">
+                  <div className="font-semibold relative w-fit -mt-1 font-small  text-[#000000] text-[length:var(--small-font-size)] tracking-[var(--small-letter-spacing)] leading-[var(--small-line-height)] whitespace-nowrap [font-style:var(--small-font-style)]">
                     Mamang Penjaga
                   </div>
                   <div className="relative w-[227px] font-small font-[number:var(--subtle-font-weight)] text-slate-500 text-[length:var(--subtle-font-size)] tracking-tight leading-5 [font-style:var(--subtle-font-style)]">
@@ -166,7 +162,7 @@ export default async function FieldDetail({
               </div>
             </a>
           </div>
-          <div className="inline-block h-[195px] w-0.5 self-stretch bg-neutral-200 opacity-100 dark:opacity-50"></div>
+          <div className="inline-block h-20 w-0.5 self-stretch bg-neutral-200 opacity-100 dark:opacity-50"></div>
           <div className="flex flex-col items-end relative flex-1 self-stretch grow">
             <div className="relative w-fit mt-[-1.00px] font-h-4 font-[number:var(--h-4-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
               <b className="text-xl">
@@ -205,12 +201,11 @@ export default async function FieldDetail({
         </div>
       </div>
 
-      {/* {/* <div className="grid gap-5 h-full mb-5"> */}
-      {/* {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
+      {/* <div className="grid gap-5 h-full mb-5"> */}
+      {/* <Calendar className="bg-white rounded-2xl shadow-xl"></Calendar> */}
       <Reservation lapangan={lapangan}></Reservation>
-      {/* <Reservation lapangan={lapangan}></Reservation>
-        {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
-          <ScheduleeDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0} price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleeDay>
+      {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
+          <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
         </div> */}
       {/* {/* </div> */}
     </div>

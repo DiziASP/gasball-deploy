@@ -63,6 +63,32 @@ export const ScheduleDay = ({ statusArray, price }: Props): JSX.Element => {
     setTotalHours(totalHours - 1);
     checkTotalHours(totalHours - 1, price);
   }
+
+  function checkTotalHours(totalHours: number, price: number) {
+    var button = document.getElementById('bookButton');
+    if (totalHours == 0) {
+      button?.classList.add('cursor-not-allowed');
+      button?.classList.add('opacity-50');
+    } else {
+      button?.classList.remove('cursor-not-allowed');
+      button?.classList.remove('opacity-50');
+    }
+    let hoursValueElement = document.getElementById('hoursValue');
+
+    if (hoursValueElement) {
+      // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
+      hoursValueElement.textContent = totalHours.toString();
+    }
+
+    let priceValueElement = document.getElementById('priceValue');
+    if (priceValueElement) {
+      // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
+      priceValueElement.textContent = (totalHours * price)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+  }
+
   return (
     <div className="flex flex-col w-[300px] items-end px-[10px] pt-[15px] p-[4px] relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
       {scheduleTimes.map((time, index) => (
