@@ -1,37 +1,43 @@
-// POST /api/field
-
 import {
   FieldFilter,
   createField,
+  getFieldByKeeperId,
   getFields
 } from '@/services/field';
 import { NextRequest, NextResponse } from 'next/server';
 import { Payload } from '../../../../types/database.types';
 
-// Creates a field
 export async function POST(request: Request) {
-  const fieldPayload: Payload<"fields"> = await request.json();
+  const fieldPayload: Payload<'fields'> = await request.json();
 
+  // only accept keeperId, name, location, pricePerHour, syntheticGrass, indoor, playerBench, watcherBench, available
   if (
-    !fieldPayload.keeperId ||
-    !fieldPayload.name ||
-    !fieldPayload.pricePerHour ||
-    fieldPayload.syntheticGrass === null ||
-    fieldPayload.indoor === null ||
-    fieldPayload.playerBench === null ||
-    fieldPayload.watcherBench === null ||
-    fieldPayload.available === null
+    fieldPayload.keeperId === undefined ||
+    fieldPayload.name === undefined ||
+    fieldPayload.location === undefined ||
+    fieldPayload.pricePerHour === undefined ||
+    fieldPayload.syntheticGrass === undefined ||
+    fieldPayload.indoor === undefined ||
+    fieldPayload.playerBench === undefined ||
+    fieldPayload.watcherBench === undefined ||
+    fieldPayload.available === undefined ||
+    fieldPayload.id ||
+    fieldPayload.created_at ||
+    fieldPayload.updated_at
   ) {
     return NextResponse.json(
       {
         status: 'error',
-        message: 'Missing required field'
+        message: 'Bad request! Body parameters are not correct'
       },
-      { status: 422 }
+      { status: 400 }
     );
   }
 
+  // execute create
   const { data, error } = await createField(fieldPayload);
+
+  // Check for supabase errors
   if (error) {
     return NextResponse.json(
       {
@@ -41,16 +47,23 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+
+  // successful return
   return NextResponse.json(
-    { status: 'success', message: 'Field succesfully created', data },
+    {
+      status: 'success',
+      message: 'User updated succesfully',
+      data: { field: data }
+    },
     { status: 200 }
   );
 }
 
-// GET /api/field
-// Gets all field with query params
 export async function GET(request: NextRequest) {
   const searchQuery = request.nextUrl.searchParams;
+
+  const keeperId =
+    searchQuery.get('keeperId') !== null ? searchQuery.get('keeperId') : null;
   const filters: FieldFilter = {
     name: searchQuery.get('name'),
     priceStart:
@@ -83,7 +96,9 @@ export async function GET(request: NextRequest) {
         : null
   };
 
-  const { data, error } = await getFields(filters);
+  const { data, error } = keeperId === null
+    ? await getFields(filters)
+    : await getFieldByKeeperId(keeperId);
   if (error) {
     return NextResponse.json(
       {
