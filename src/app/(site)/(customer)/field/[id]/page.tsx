@@ -132,7 +132,9 @@ export default async function FieldDetail({
         <div className="flex w-[805px] gap-[20px] p-[25px] relative bg-white rounded-[21px] -mt-60 pt-4 px-4 max-h-56 ml-5">
           <div className="flex flex-col w-[444px] items-start  relative">
             <div className="relative w-fit mt-[-1.00px] font-h-4 font-[number:var(--h-8-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
-              <b className="text-2xl">{lapangan.name}{' '}{params.id}</b>
+              <b className="text-2xl">
+                {lapangan.name} {params.id}
+              </b>
             </div>
             <p className="relative self-stretch font-body font-[number:var(--body-font-weight)] text-slate-900 text-[length:var(--body-font-size)] tracking-[var(--body-letter-spacing)] leading-[var(--body-line-height)] [font-style:var(--body-font-style)]">
               {lapangan.address}
