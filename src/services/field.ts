@@ -15,45 +15,62 @@ export interface FieldFilter {
 
 export const createField = async (fieldPayload: Payload<'fields'>) => {
   const supabase = createClient(cookies());
-
-  const { data, error } = await supabase
+  const query = supabase
     .from('fields')
     .insert([{ ...fieldPayload }])
     .select();
-
+  const { data, error } = await query;
   return { data, error };
 };
 
 export const updateField = async (
-  id: string,
+  id: string | null | undefined,
   fieldPayload: Payload<'fields'>
 ) => {
   const supabase = createClient(cookies());
-
-  const { data, error } = await supabase
+  const query = supabase
     .from('fields')
     .update({ ...fieldPayload })
-    .eq('id', id)
+    .eq('id', id as string)
     .select();
-
+  const { data, error } = await query;
   return { data, error };
 };
 
-export const deleteField = async (id: string) => {
+export const deleteField = async (id: string | null | undefined) => {
   const supabase = createClient(cookies());
-  const { error } = await supabase.from('fields').delete().eq('id', id);
+  const { error } = await supabase
+    .from('fields')
+    .delete()
+    .eq('id', id as string);
   return { error };
 };
 
-export const getFieldById = async (id: string) => {
+export const getFieldById = async (id: string | null | undefined) => {
   const supabase = createClient(cookies());
-
-  const { data, error } = await supabase
+  const query = supabase
     .from('fields')
-    .select('*')
-    .eq('id', id)
+    .select(
+      'id, name, location, pricePerHour, syntheticGrass, indoor, playerBench, watcherBench, available, users (id, full_name, phone_number)'
+    )
+    .eq('id', id as string)
     .single();
+  const { data, error } = await query;
+  return { data, error };
+};
 
+export const getFieldByKeeperId = async (
+  keeperId: string | null | undefined
+) => {
+  const supabase = createClient(cookies());
+  const query = supabase
+    .from('fields')
+    .select(
+      'id, name, location, pricePerHour, syntheticGrass, indoor, playerBench, watcherBench, available, users (id, full_name, phone_number)'
+    )
+    .eq('keeperId', keeperId as string);
+  const { data, error } = await query;
+  console.log(data, error);
   return { data, error };
 };
 
@@ -70,7 +87,11 @@ export const getFields = async (fieldFilter: FieldFilter) => {
   } = fieldFilter;
   const supabase = createClient(cookies());
 
-  let query = supabase.from('fields').select();
+  let query = supabase
+    .from('fields')
+    .select(
+      'id, name, location, pricePerHour, syntheticGrass, indoor, playerBench, watcherBench, available, users (id, full_name, phone_number)'
+    );
   if (priceStart) {
     query.gte('pricePerHour', priceStart);
   }
