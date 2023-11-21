@@ -87,6 +87,20 @@ export const getReservationByCustomerId = async (
   return { data, error };
 };
 
+export const getReservationByKeeperId = async (
+  keeperId: string | null | undefined
+) => {
+  const supabase = createClient(cookies());
+  const query = supabase
+    .from('reservations')
+    .select(
+      '*, fields!inner (id, name, keeperId), users (id, username, full_name)'
+    )
+    .eq('fields.keeperId', keeperId as string);
+  const { data, error } = await query;
+  return { data, error };
+};
+
 export const payReservation = async (id: string | null | undefined) => {
   const supabase = createClient(cookies());
   const query = supabase
