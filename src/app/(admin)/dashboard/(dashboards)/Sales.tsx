@@ -24,67 +24,68 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { useEffect, useState } from 'react';
 
 const data = [
   {
-    name: 'Jan',
+    name: 'January',
     amt: 10,
-    tot: 1000000
+    total: 1000000
   },
   {
-    name: 'Feb',
+    name: 'February',
     amt: 20,
-    tot: 2000000
+    total: 2000000
   },
   {
-    name: 'Mar',
+    name: 'March',
     amt: 30,
-    tot: 3000000
+    total: 3000000
   },
   {
-    name: 'Apr',
+    name: 'April',
     amt: 40,
-    tot: 4000000
+    total: 4000000
   },
   {
     name: 'May',
     amt: 50,
-    tot: 5000000
+    total: 5000000
   },
   {
-    name: 'Jun',
+    name: 'June',
     amt: 70,
-    tot: 7000000
+    total: 7000000
   },
   {
-    name: 'Jul',
+    name: 'July',
     amt: 30,
-    tot: 3000000
+    total: 3000000
   },
   {
-    name: 'Aug',
+    name: 'August',
     amt: 25,
-    tot: 2500000
+    total: 2500000
   },
   {
-    name: 'Sep',
+    name: 'September',
     amt: 30,
-    tot: 5000000
+    total: 5000000
   },
   {
-    name: 'Oct',
+    name: 'October',
     amt: 70,
-    tot: 5000000
+    total: 5000000
   },
   {
-    name: 'Nov',
+    name: 'November',
     amt: 20,
-    tot: 8000000
+    total: 8000000
   },
   {
-    name: 'Dec',
+    name: 'December',
     amt: 50,
-    tot: 8000000
+    total: 8000000
   }
 ];
 
@@ -143,7 +144,40 @@ const invoices: {
   }
 ];
 
+async function getAllReservation() {
+  try {
+    const origin = 'http://localhost:3000';
+    const res = await fetch(`${origin}/api/reservation`);
+    const data = await res.json();
+
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export default function SalesDashboard() {
+  const [data, setData] = useState<
+    {
+      id: string,
+      fieldId: string,
+      customerId: string,
+      customerName: string,
+      orderDate: string,
+      hourRange: number,
+      totalPrice: number,
+      paidStatus: boolean,
+      created_at: string,
+      updated_at: string
+    }[]
+  >([]);
+
+  useEffect(() => {
+    getAllReservation().then((data) => {
+      setData(data);
+    });
+  }, []);
+  
   return (
     <div className="flex flex-col py-6 gap-6">
       <h1>Sales Dashboard</h1>
@@ -162,7 +196,7 @@ export default function SalesDashboard() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" width={300}/>
             <YAxis
               tickFormatter={(value) =>
                 new Intl.NumberFormat('id', {
@@ -170,10 +204,17 @@ export default function SalesDashboard() {
                   currency: 'IDR'
                 }).format(value)
               }
+              width={120}
             />
-            <Tooltip />
+            <Tooltip formatter={
+              (value: number) =>
+                new Intl.NumberFormat('id', {
+                  style: 'currency',
+                  currency: 'IDR'
+                }).format(value)
+            }/>
             <Legend />
-            <Bar dataKey="tot" stackId="a" fill="#8884d8" />
+            <Bar dataKey="total" stackId="a" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
 
@@ -207,17 +248,17 @@ export default function SalesDashboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoices.map((invoice) => (
-              <TableRow key={invoice.id}>
-                <TableCell className="font-medium">{invoice.id}</TableCell>
-                <TableCell>{invoice.date}</TableCell>
-                <TableCell>{invoice.field}</TableCell>
-                <TableCell>{invoice.customer}</TableCell>
+            {data.map((invoice) => (
+              <TableRow key={invoice.customerId}>
+                <TableCell className="font-medium">{invoice.customerId}</TableCell>
+                <TableCell>{invoice.orderDate}</TableCell>
+                <TableCell>{invoice.fieldId}</TableCell>
+                <TableCell>{invoice.customerId}</TableCell>
                 <TableCell className="text-right">
                   {new Intl.NumberFormat('id', {
                     style: 'currency',
                     currency: 'IDR'
-                  }).format(invoice.price)}
+                  }).format(invoice.totalPrice)}
                 </TableCell>
               </TableRow>
             ))}
