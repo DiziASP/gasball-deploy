@@ -16,5 +16,11 @@ export async function GET(request: Request) {
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(requestUrl.origin);
+  return NextResponse.json(
+    {
+      status: 'success',
+      message: 'Callback success'
+    },
+    { status: 200 }
+  );
 }
