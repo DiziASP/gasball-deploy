@@ -7,7 +7,7 @@ import {
 import { NextRequest, NextResponse } from 'next/server';
 import { Payload } from '../../../../types/database.types';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const fieldPayload: Payload<'fields'> = await request.json();
 
   // only accept keeperId, name, location, pricePerHour, syntheticGrass, indoor, playerBench, watcherBench, available
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   return NextResponse.json(
     {
       status: 'success',
-      message: 'User updated succesfully',
+      message: 'Field updated succesfully',
       data: { field: data }
     },
     { status: 200 }
@@ -110,7 +110,11 @@ export async function GET(request: NextRequest) {
     );
   }
   return NextResponse.json(
-    { status: 'success', message: 'Field succesfully fetched', data },
+    {
+      status: 'success',
+      message: 'Field succesfully fetched',
+      data: { field: data }
+    },
     { status: 200 }
   );
 }

@@ -29,7 +29,8 @@ export const updateUser = async (
     .from('users')
     .update({ ...userPayload })
     .eq('id', id as string)
-    .select();
+    .select()
+    .single();
   const { data, error } = await query;
   return { data, error };
 };

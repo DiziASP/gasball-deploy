@@ -18,7 +18,11 @@ export async function GET(request: NextRequest) {
     );
   }
   return NextResponse.json(
-    { status: 'success', message: 'Field succesfully fetched', data },
+    {
+      status: 'success',
+      message: 'Field succesfully fetched',
+      data: { field: data }
+    },
     { status: 200 }
   );
 }
@@ -64,7 +68,11 @@ export async function PUT(request: NextRequest) {
     );
   }
   return NextResponse.json(
-    { status: 'success', message: 'Field succesfully updated', data },
+    {
+      status: 'success',
+      message: 'Field succesfully updated',
+      data: { field: data }
+    },
     { status: 200 }
   );
 }
