@@ -14,7 +14,10 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ options }) => {
   return (
     <div className="flex flex-col space-y-2">
       {options.map((option, index) => (
-        <label key={index} className="inline-flex items-center space-x-2 cursor-pointer text-sm mt-1">
+        <label
+          key={index}
+          className="inline-flex items-center space-x-2 cursor-pointer text-sm mt-1"
+        >
           <input
             type="radio"
             value={option}
@@ -30,8 +33,6 @@ const RadioGroup: React.FC<RadioGroupProps> = ({ options }) => {
 };
 
 export default RadioGroup;
-
-
 
 // import React from 'react';
 
