@@ -149,8 +149,8 @@ async function getAllReservation() {
     const origin = 'http://localhost:3000';
     const res = await fetch(`${origin}/api/reservation`);
     const data = await res.json();
-
-    return data;
+    console.log(data);
+    return data['data']['reservation'];
   } catch (err) {
     console.log(err);
   }
@@ -183,7 +183,7 @@ export default function SalesDashboard() {
       <h1>Sales Dashboard</h1>
 
       <div className="flex flex-row gap-3">
-        <ResponsiveContainer width="60%" height={480}>
+        <ResponsiveContainer width="100%" height={480}>
           <BarChart
             width={500}
             height={300}
@@ -218,21 +218,6 @@ export default function SalesDashboard() {
             <Bar dataKey="total" stackId="a" fill="#8884d8" />
           </BarChart>
         </ResponsiveContainer>
-
-        <ResponsiveContainer width="50%" height={480}>
-          <PieChart width={400} height={400}>
-            <Pie
-              data={data2}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#82ca9d"
-              dataKey="value"
-              label
-            />
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
       </div>
 
       <div>
@@ -244,7 +229,7 @@ export default function SalesDashboard() {
               <TableHead className="w-[100px]">ID</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Field</TableHead>
-              <TableHead>Customer</TableHead>
+              <TableHead>PIC</TableHead>
               <TableHead className="text-right">Price</TableHead>
             </TableRow>
           </TableHeader>
@@ -256,7 +241,7 @@ export default function SalesDashboard() {
                 </TableCell>
                 <TableCell>{invoice.orderDate}</TableCell>
                 <TableCell>{invoice.fieldId}</TableCell>
-                <TableCell>{invoice.customerId}</TableCell>
+                <TableCell>{invoice.customerName}</TableCell>
                 <TableCell className="text-right">
                   {new Intl.NumberFormat('id', {
                     style: 'currency',
