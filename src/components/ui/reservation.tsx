@@ -82,9 +82,6 @@ export const Reservation = (lapangan: Props): JSX.Element => {
     // Lakukan operasi lain yang diperlukan saat tanggal dipilih atau tidak dipilih
   };
 
-  
-
-
   return (
     <div className="grid gap-2 h-full mb-5 w-fit">
       <Calendar

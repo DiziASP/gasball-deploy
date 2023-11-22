@@ -1,22 +1,12 @@
-'client'
+'use client';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import { Calendar, CalendarProps } from '@/components/ui/calendar';
+
+
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScheduleDay } from '@/components/ui/schedule-day';
 import Reservation from '@/components/ui/reservation';
 import React, { useState, useEffect } from 'react';
-import { da } from 'date-fns/locale';
-import { PathParamsContext } from 'next/dist/shared/lib/hooks-client-context.shared-runtime';
-import { start } from 'repl';
+
 
 type oneDaySlot = {
   date: Date;
@@ -43,7 +33,7 @@ type Field = {
 
 async function fetchFieldData(fieldId: string) {
   const apiUrl = `http://localhost:3000/api/field/${fieldId}`;
-  
+
   try {
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -56,15 +46,12 @@ async function fetchFieldData(fieldId: string) {
     }
 
     const data = await response.json();
-    
+
     return data;
-    
   } catch (error) {
     console.log(error);
+  }
 }
-}
-
-
 
 const datePlotsForField: oneDaySlot[] = [
   {
@@ -128,40 +115,41 @@ const datePlotsForField: oneDaySlot[] = [
 
 const reservations: ReservationData[] = [
   {
-    id: "b7b187d9-76c4-4f0a-99df-e6d8e9bde978",
-    fieldId: "cb42a9dc-61a0-455a-8afc-c497d5c8c5b4",
-    customerId: "51e976c9-c4af-4ef0-bd10-70b990d761cb",
-    customerName: "Siapahayo",
-    orderDate: "2023-11-20T10:00:00+00:00",
+    id: 'b7b187d9-76c4-4f0a-99df-e6d8e9bde978',
+    fieldId: 'cb42a9dc-61a0-455a-8afc-c497d5c8c5b4',
+    customerId: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
+    customerName: 'Siapahayo',
+    orderDate: '2023-11-20T10:00:00+00:00',
     hourRange: 2,
     totalPrice: 150000,
     paidStatus: false,
-    created_at: "2023-11-21T07:19:07.945001+00:00",
-    updated_at: "2023-11-21T07:19:07.945001+00:00",
+    created_at: '2023-11-21T07:19:07.945001+00:00',
+    updated_at: '2023-11-21T07:19:07.945001+00:00'
   },
   {
-    id: "b7b187d9-76c4-4f0a-99df-e6d8e9bde978",
-    fieldId: "cb42a9dc-61a0-455a-8afc-c497d5c8c5b4",
-    customerId: "51e976c9-c4af-4ef0-bd10-70b990d761cb",
-    customerName: "Siapahayo",
-    orderDate: "2023-11-20T01:00:00+00:00",
+    id: 'b7b187d9-76c4-4f0a-99df-e6d8e9bde978',
+    fieldId: 'cb42a9dc-61a0-455a-8afc-c497d5c8c5b4',
+    customerId: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
+    customerName: 'Siapahayo',
+    orderDate: '2023-11-20T01:00:00+00:00',
     hourRange: 2,
     totalPrice: 150000,
     paidStatus: false,
-    created_at: "2023-11-21T07:19:07.945001+00:00",
-    updated_at: "2023-11-21T07:19:07.945001+00:00",
-  },{
-    id: "b7b187d9-76c4-4f0a-99df-e6d8e9bde978",
-    fieldId: "cb42a9dc-61a0-455a-8afc-c497d5c8c5b4",
-    customerId: "51e976c9-c4af-4ef0-bd10-70b990d761cb",
-    customerName: "Siapahayo",
-    orderDate: "2023-11-21T01:00:00+00:00",
+    created_at: '2023-11-21T07:19:07.945001+00:00',
+    updated_at: '2023-11-21T07:19:07.945001+00:00'
+  },
+  {
+    id: 'b7b187d9-76c4-4f0a-99df-e6d8e9bde978',
+    fieldId: 'cb42a9dc-61a0-455a-8afc-c497d5c8c5b4',
+    customerId: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
+    customerName: 'Siapahayo',
+    orderDate: '2023-11-21T01:00:00+00:00',
     hourRange: 3,
     totalPrice: 150000,
     paidStatus: false,
-    created_at: "2023-11-21T07:19:07.945001+00:00",
-    updated_at: "2023-11-21T07:19:07.945001+00:00",
-  },
+    created_at: '2023-11-21T07:19:07.945001+00:00',
+    updated_at: '2023-11-21T07:19:07.945001+00:00'
+  }
   // Tambahkan data reservasi lainnya jika ada
 ];
 
@@ -178,8 +166,8 @@ type ReservationData = {
   updated_at: string;
 };
 
-async function fetchReservationData(id: string){
-  try{
+async function fetchReservationData(id: string) {
+  try {
     const apiUrl = `http://localhost:3000/api/reservation/${id}`;
     const response = await fetch(apiUrl, {
       method: 'GET',
@@ -187,21 +175,23 @@ async function fetchReservationData(id: string){
         'Content-Type': 'application/json'
       }
     });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      const responseData = await response.json();
-      const reservationData: ReservationData[] = responseData.data.reservation;
-  
-      console.log('Fetched reservation data:', reservationData);
-      return reservationData;
-    } catch (error){
-      console.log(error)
-    }  
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseData = await response.json();
+    const reservationData: ReservationData[] = responseData.data.reservation;
+
+    console.log('Fetched reservation data:', reservationData);
+    return reservationData;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-function convertReservationToTimeSlots(reservations: ReservationData[]): oneDaySlot[] {
+function convertReservationToTimeSlots(
+  reservations: ReservationData[]
+): oneDaySlot[] {
   const timeSlots: oneDaySlot[] = [];
 
   reservations.forEach((reservation) => {
@@ -209,7 +199,7 @@ function convertReservationToTimeSlots(reservations: ReservationData[]): oneDayS
     const statusArray = new Array(23).fill(false);
 
     const startHour = date.getUTCHours();
-    const startIdx = startHour < 23 ? startHour : 0; 
+    const startIdx = startHour < 23 ? startHour : 0;
 
     const endIdx = Math.min(startIdx + reservation.hourRange, 23); // Batasan akhir statusArray
 
@@ -222,13 +212,15 @@ function convertReservationToTimeSlots(reservations: ReservationData[]): oneDayS
     );
 
     if (existingTimeSlot) {
-      existingTimeSlot.statusArray = existingTimeSlot.statusArray.map((status, index) => {
-        return status || statusArray[index];
-      });
+      existingTimeSlot.statusArray = existingTimeSlot.statusArray.map(
+        (status, index) => {
+          return status || statusArray[index];
+        }
+      );
     } else {
       timeSlots.push({
         date: new Date(date.setUTCHours(0, 0, 0, 0)),
-        statusArray: statusArray,
+        statusArray: statusArray
       });
     }
   });
@@ -236,29 +228,79 @@ function convertReservationToTimeSlots(reservations: ReservationData[]): oneDayS
   return timeSlots;
 }
 
-
-export default async function FieldDetail({
+export default function FieldDetail({
   params
 }: {
   params: { id: string };
 }) {
-  
   const id_test = '64e77936-e38e-449d-a008-fc7dde586c3f';
 
-  const res = await fetchFieldData(id_test);
-  const lapangan = res.data.field;
-  lapangan.datePlots = datePlotsForField;
-  const reservation = await fetchReservationData(id_test);
-  if (reservation) {
-    lapangan.datePlots = convertReservationToTimeSlots(reservation);
-  } else {
-    lapangan.datePlots = []
+  const [datePlotsForField, setDatePlotsForField] = useState<oneDaySlot[]>([]);
+  const [reservation, setReservation] = useState<ReservationData[]>([]);
+  const [lapangan, setLapangan] = useState<Field>();
+
+useEffect(() => {
+  const fetchData = async () => {
+    const res = await fetchFieldData(id_test);
+      const fieldData = res.data.field;
+      setLapangan(res.data.field);
+      const res2 = await fetchReservationData(id_test);
+      if (res2) {
+        setReservation(res2);
+        const datePlots = convertReservationToTimeSlots(res2);
+        setDatePlotsForField(datePlots);
+
+        // Update the datePlots in lapangan
+        const updatedLapangan = { ...fieldData, datePlots };
+        setLapangan(updatedLapangan);
+      } 
+      else {
+        const updatedLapangan = { ...fieldData, datePlots: [] };
+        setLapangan(updatedLapangan);
+      }
+  };
+  console.log(lapangan);
+
+  fetchData();
+}, []);
+
+  // const res = await fetchFieldData(id_test);
+  // const lapangan = res.data.field;
+  // lapangan.datePlots = datePlotsForField;
+  // const reservation = await fetchReservationData(id_test);
+  // if (reservation) {
+  //   lapangan.datePlots = convertReservationToTimeSlots(reservation);
+  // } else {
+  //   lapangan.datePlots = [];
+  // }
+  const handleBookButtonClicked = async () => {
+    const apiUrl = `http://localhost:3000/api/reservation`;
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        fieldId: id_test,
+        customerId: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
+        orderDate: '2023-11-21T01:00:00+00:00',
+        hourRange: 3,
+        totalPrice: 150000,
+        paidStatus: false
+      })
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseData = await response.json();
+    console.log('Fetched reservation data:', responseData);
+
   }
-  
+
   return (
     <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
       <div>
-
         <img
           src="/assets/images/field.jpg"
           alt=""
@@ -325,9 +367,8 @@ export default async function FieldDetail({
                   </div>
                   <button
                     id="bookButton"
-                    className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border" onClick={() => {
-                      
-                    }}
+                    className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
+                    // onClick={handleBookButtonClicked}
                   >
                     <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
                       Book
@@ -344,4 +385,3 @@ export default async function FieldDetail({
     </div>
   );
 }
-
