@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -163,6 +163,28 @@ type ReservationData = {
   updated_at: string;
 };
 
+type user_self = {
+  id: string;
+  email: string;
+  username: string;
+  full_name: string;
+  phone_number: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
+};
+
+const user_dummy: user_self = {
+  id: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
+  email: 'awokawok@gmail.com',
+  username: 'awokawok',
+  full_name: 'Siapahayo',
+  phone_number: '081355538777',
+  role: 'customer',
+  created_at: '2021-10-29T07:19:07.945001+00:00',
+  updated_at: '2021-10-29T07:19:07.945001+00:00'
+}
+
 async function fetchReservationData(id: string) {
   try {
     const apiUrl = `http://localhost:3000/api/reservation/${id}`;
@@ -182,6 +204,27 @@ async function fetchReservationData(id: string) {
     console.log('Fetched reservation data:', reservationData);
     return reservationData;
   } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getSelf(){
+  try {
+    const apiUrl = `http://localhost:3000/api/auth/self`;
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const res = await response.json();
+    console.log('Fetched user data:', res);
+    return res;
+} catch (error) {
     console.log(error);
   }
 }
@@ -225,69 +268,21 @@ function convertReservationToTimeSlots(
   return timeSlots;
 }
 
-export default function FieldDetail({ params }: { params: { id: string } }) {
-  const id_test = '64e77936-e38e-449d-a008-fc7dde586c3f';
+export default async function FieldDetail({ params }: { params: { id: string } }) {
 
-  const [datePlotsForField, setDatePlotsForField] = useState<oneDaySlot[]>([]);
-  const [reservation, setReservation] = useState<ReservationData[]>([]);
-  const [lapangan, setLapangan] = useState<Field>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetchFieldData(id_test);
-      const fieldData = res.data.field;
-      setLapangan(res.data.field);
-      const res2 = await fetchReservationData(id_test);
-      if (res2) {
-        setReservation(res2);
-        const datePlots = convertReservationToTimeSlots(res2);
-        setDatePlotsForField(datePlots);
-
-        // Update the datePlots in lapangan
-        const updatedLapangan = { ...fieldData, datePlots };
-        setLapangan(updatedLapangan);
-      } else {
-        const updatedLapangan = { ...fieldData, datePlots: [] };
-        setLapangan(updatedLapangan);
-      }
-    };
-    console.log(lapangan);
-
-    fetchData();
-  }, []);
-
-  // const res = await fetchFieldData(id_test);
-  // const lapangan = res.data.field;
-  // lapangan.datePlots = datePlotsForField;
-  // const reservation = await fetchReservationData(id_test);
-  // if (reservation) {
-  //   lapangan.datePlots = convertReservationToTimeSlots(reservation);
-  // } else {
-  //   lapangan.datePlots = [];
-  // }
-  const handleBookButtonClicked = async () => {
-    const apiUrl = `http://localhost:3000/api/reservation`;
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fieldId: id_test,
-        customerId: '51e976c9-c4af-4ef0-bd10-70b990d761cb',
-        orderDate: '2023-11-21T01:00:00+00:00',
-        hourRange: 3,
-        totalPrice: 150000,
-        paidStatus: false
-      })
-    });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const responseData = await response.json();
-    console.log('Fetched reservation data:', responseData);
-  };
+  const res = await fetchFieldData(params.id);
+  const lapangan = res.data.field;
+  lapangan.datePlots = datePlotsForField;
+  const reservation = await fetchReservationData(params.id);
+  if (reservation) {
+    lapangan.datePlots = convertReservationToTimeSlots(reservation);
+  } else {
+    lapangan.datePlots = [];
+  }
+  const res2 = await getSelf();
+  // const self = res2.data.user;
+  
 
   return (
     <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
@@ -359,7 +354,7 @@ export default function FieldDetail({ params }: { params: { id: string } }) {
                   <button
                     id="bookButton"
                     className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
-                    // onClick={handleBookButtonClicked}
+                    
                   >
                     <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
                       Book
@@ -372,11 +367,8 @@ export default function FieldDetail({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <Reservation lapangan={lapangan}></Reservation>
-      {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
-          <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
-        </div> */}
-      {/* {/* </div> */}
+      <Reservation lapangan={lapangan} user={user_dummy}></Reservation>
+
     </div>
   );
 }
