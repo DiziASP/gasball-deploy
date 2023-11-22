@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Brand } from './brand';
+import { UserNav } from './user-nav';
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -64,16 +65,18 @@ export function Navigation() {
             </Link>
           </NavigationMenuItem>
 
-          {/* Profile */}
+          {/* Dashboard - jangan lupa diubah kalo udah bisa ambil state pengguna */}
           <NavigationMenuItem>
-            <Link href="/profile" legacyBehavior passHref>
+            <Link href="/dashboard" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                Dashboard
               </NavigationMenuLink>
             </Link>
+          </NavigationMenuItem>
+
+          {/* Profile */}
+          <NavigationMenuItem>
+            <UserNav />
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

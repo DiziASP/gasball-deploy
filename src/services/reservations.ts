@@ -2,14 +2,6 @@ import { createClient } from '@/lib/supabase/server';
 import { Payload } from '../../types/database.types';
 import { cookies } from 'next/headers';
 
-export interface ReservationFilter {
-  yearStart: number | null;
-  monthStart: number | null;
-  yearEnd: number | null;
-  monthEnd: number | null;
-  paidStatus: boolean | null;
-}
-
 export const createReservation = async (
   reservationPayload: Payload<'reservations'>
 ) => {
