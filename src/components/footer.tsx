@@ -2,7 +2,7 @@
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react';
+import { Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -44,25 +44,25 @@ const contact: { title: string; number: string }[] = [
 const social: { media: string; href: string }[] = [
   {
     media: 'Instagram',
-    href: '/'
+    href: 'https://www.instagram.com/nauravld/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA=='
   },
   {
-    media: 'Facebook',
-    href: '/'
+    media: 'Linkedin',
+    href: 'https://www.linkedin.com/in/naura-valda-prameswari-13577a1b0/'
   },
   {
     media: 'Twitter',
-    href: '/'
+    href: 'https://twitter.com/hero0brine'
   },
   {
     media: 'Youtube',
-    href: '/'
+    href: 'https://www.youtube.com/@nauravaldaprameswari2922'
   }
 ];
 
 export const Footer = () => {
   return (
-    <div className="mt-auto bg-background rounded-t-xl">
+    <div className="mt-auto bg-background">
       <div className="flex flex-col pt-12 pb-6 container">
         <div className="flex flex-row justify-evenly">
           <div className="space-y-2 max-w-[15rem]">
@@ -106,7 +106,11 @@ export const Footer = () => {
             </h3>
             <ul className="flex flex-row list-none space-x-3">
               {social.map((component) => (
-                <SocialMedia key={component.media} media={component.media} />
+                <SocialMedia
+                  key={component.media}
+                  media={component.media}
+                  href={component.href}
+                />
               ))}
             </ul>
           </div>
@@ -173,13 +177,13 @@ const SocialMedia = React.forwardRef<
       <a
         ref={ref}
         className={cn(
-          'block select-none space-y-1 rounded-full leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+          'block select-none space-y-1 rounded-full leading-none no-underline outline-none transition-colors scale-90 hover:scale-100 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
           className
         )}
         {...props}
       >
         {media == 'Instagram' && <Instagram className="w-6 h-6" />}
-        {media == 'Facebook' && <Facebook className="w-6 h-6" />}
+        {media == 'Linkedin' && <Linkedin className="w-6 h-6" />}
         {media == 'Twitter' && <Twitter className="w-6 h-6" />}
         {media == 'Youtube' && <Youtube className="w-6 h-6" />}
       </a>

@@ -29,7 +29,7 @@ export default function RootLayout({
         )}
       >
         <Navigation />
-        <main className="mantialiased flex flex-col min-w-full">
+        <main className="mantialiased flex flex-col min-w-full flex-1">
           {children}
         </main>
         <Footer />
