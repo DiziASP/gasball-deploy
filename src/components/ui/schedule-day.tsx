@@ -1,26 +1,31 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Schedule } from '@/components/ui/schedule';
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import { on } from 'events';
 import { add, set } from 'date-fns';
 import { stat } from 'fs';
 import { format } from 'path';
 
 interface Props {
-  selectedDate : string;
+  selectedDate: string;
   totalHours: number;
   statusArray: boolean[]; // Menambahkan prop statusArray
   price: number;
   fieldID: string;
   customerID: string;
   customerName: string;
-
 }
 
-
-export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, customerID, customerName }: Props): JSX.Element => {
+export const ScheduleDay = ({
+  selectedDate,
+  statusArray,
+  price,
+  fieldID,
+  customerID,
+  customerName
+}: Props): JSX.Element => {
   const scheduleTimes = [
     '01.00',
     '02.00',
@@ -49,30 +54,35 @@ export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, custome
   const [totalHours, setTotalHours] = React.useState(0);
   const [firstoccurence, setFirstOccurence] = React.useState(0);
   const [lastoccurence, setLastOccurence] = React.useState(0);
-  const [scheduleStatus, setScheduleStatus] = React.useState<('booked' | 'default' | 'active' | 'hover')[]>([]);
+  const [scheduleStatus, setScheduleStatus] = React.useState<
+    ('booked' | 'default' | 'active' | 'hover')[]
+  >([]);
   const [shouldRender, setShouldRender] = React.useState(false);
 
   const router = useRouter();
   async function checkRangeHours() {
-    if (totalHours>1) {
+    if (totalHours > 1) {
       const firstoccurence = scheduleStatus.indexOf('active');
       setFirstOccurence(firstoccurence);
       const lastoccurence = scheduleStatus.lastIndexOf('active');
       setLastOccurence(lastoccurence);
-      
+
       if (firstoccurence !== lastoccurence) {
         for (let i = firstoccurence; i <= lastoccurence; i++) {
-         scheduleStatus[i] = 'active';
+          scheduleStatus[i] = 'active';
         }
-        console.log("cek range")
-        console.log(scheduleStatus);console.log(firstoccurence,lastoccurence);
+        console.log('cek range');
+        console.log(scheduleStatus);
+        console.log(firstoccurence, lastoccurence);
       }
     }
   }
 
   useEffect(() => {
     // Inisialisasi scheduleStatus dengan nilai dari statusArray saat komponen dimuat
-    const initialScheduleStatus = statusArray.map(status => (status ? 'booked' : 'default'));
+    const initialScheduleStatus = statusArray.map((status) =>
+      status ? 'booked' : 'default'
+    );
     if (statusArray.length === 0) {
       for (let i = 0; i < 24; i++) initialScheduleStatus.push('default');
     }
@@ -81,29 +91,52 @@ export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, custome
 
   useEffect(() => {
     checkRangeHours();
-
   }, [scheduleStatus]);
 
   useEffect(() => {
     checkRangeHours();
     setShouldRender(true);
-  }, [totalHours<(lastoccurence-firstoccurence)]);
+  }, [totalHours < lastoccurence - firstoccurence]);
 
   function addHours(fieldID: string, customerID: string, customerName: string) {
     setTotalHours(totalHours + 1);
-    checkTotalHours(totalHours + 1, price, fieldID, customerID, customerName, formatToISO(selectedDate, firstoccurence));
-    console.log("TES", fieldID, customerID, customerName, formatToISO(selectedDate, firstoccurence));
+    checkTotalHours(
+      totalHours + 1,
+      price,
+      fieldID,
+      customerID,
+      customerName,
+      formatToISO(selectedDate, firstoccurence)
+    );
+    console.log(
+      'TES',
+      fieldID,
+      customerID,
+      customerName,
+      formatToISO(selectedDate, firstoccurence)
+    );
   }
 
-  function minOneHour(fieldID: string, customerID: string, customerName: string) {
+  function minOneHour(
+    fieldID: string,
+    customerID: string,
+    customerName: string
+  ) {
     setTotalHours(totalHours - 1);
-    checkTotalHours(totalHours - 1, price, fieldID, customerID, customerName, formatToISO(selectedDate, firstoccurence));
+    checkTotalHours(
+      totalHours - 1,
+      price,
+      fieldID,
+      customerID,
+      customerName,
+      formatToISO(selectedDate, firstoccurence)
+    );
   }
   function formatToTime(number: number): string {
     const hours = String(number).padStart(2, '0');
     const minutes = '00';
     const seconds = '00';
-  
+
     return `${hours}:${minutes}:${seconds}`;
   }
 
@@ -111,7 +144,14 @@ export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, custome
     return `${str}T${formatToTime(number)}+00:00`;
   }
 
-  function checkTotalHours(totalHours: number, price: number, fieldID: string, customerID: string, customerName: string, orderDate: string) {
+  function checkTotalHours(
+    totalHours: number,
+    price: number,
+    fieldID: string,
+    customerID: string,
+    customerName: string,
+    orderDate: string
+  ) {
     var button = document.getElementById('bookButton');
     if (totalHours == 0) {
       button?.classList.add('cursor-not-allowed');
@@ -119,7 +159,7 @@ export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, custome
     } else {
       button?.classList.remove('cursor-not-allowed');
       button?.classList.remove('opacity-50');
-      console.log("masuk")
+      console.log('masuk');
       button?.addEventListener('click', () => {
         handleBookButtonClicked({
           FieldID: fieldID,
@@ -174,50 +214,51 @@ export const ScheduleDay = ({ selectedDate, statusArray, price, fieldID, custome
         customerName: CustomerName,
         orderDate: orderDate,
         hourRange: HourRange,
-        totalPrice: TotalPrice,
+        totalPrice: TotalPrice
       })
     });
     if (!response.ok) {
       alert('ga bisa dipost');
       throw new Error('Network response was not ok');
-
     }
     router.push(`field/${FieldID}/payment`);
     // const responseData = await response.json();
     // console.log('Fetched reservation data:', responseData);
   };
-  
 
-
-return (
-  <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
-    { scheduleStatus.map((status, index) => (
-      <React.Fragment key={index}>
-        <Schedule
-          className={`!relative mt-[-4px] ${
-            statusArray[index] ? 'booked' : ''
-          }`}
-          status={statusArray[index] ? 'booked' : 'default'}
-          onClickFunction={() => {
-            addHours(fieldID, customerID, customerName);
-            setScheduleStatus((prev) => {scheduleStatus[index] = 'active'; return [...prev]});
-          }}
-          removeFunction={() => {
-            minOneHour(fieldID, customerID, customerName);
-            setScheduleStatus((prev) => {scheduleStatus[index] = 'default';  return [...prev]});
-          }}
-        />
-
-        <div className="flex items-center justify-end gap-[8px] relative self-stretch w-full flex-[0_0_auto] mt-[-4px]">
-          <div className="relative w-fit mt-[-1.00px] font-detail font-[number:var(--detail-font-weight)] text-slate-500 text-center tracking-[var(--detail-letter-spacing)] leading-[var(--detail-line-height)] whitespace-nowrap [font-style:var(--detail-font-style)]">
-            {scheduleTimes[index]}
-          </div>
-          <hr
-            className="relative flex-1 grow h-px object-cover"
+  return (
+    <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
+      {scheduleStatus.map((status, index) => (
+        <React.Fragment key={index}>
+          <Schedule
+            className={`!relative mt-[-4px] ${
+              statusArray[index] ? 'booked' : ''
+            }`}
+            status={statusArray[index] ? 'booked' : 'default'}
+            onClickFunction={() => {
+              addHours(fieldID, customerID, customerName);
+              setScheduleStatus((prev) => {
+                scheduleStatus[index] = 'active';
+                return [...prev];
+              });
+            }}
+            removeFunction={() => {
+              minOneHour(fieldID, customerID, customerName);
+              setScheduleStatus((prev) => {
+                scheduleStatus[index] = 'default';
+                return [...prev];
+              });
+            }}
           />
-        </div>
-      </React.Fragment>
-    ))}
-  </div>
-);
+
+          <div className="flex items-center justify-end gap-[8px] relative self-stretch w-full flex-[0_0_auto] mt-[-4px]">
+            <div className="relative w-fit mt-[-1.00px] font-detail font-[number:var(--detail-font-weight)] text-slate-500 text-center tracking-[var(--detail-letter-spacing)] leading-[var(--detail-line-height)] whitespace-nowrap [font-style:var(--detail-font-style)]">
+              {scheduleTimes[index]}
+            </div>
+            <hr className="relative flex-1 grow h-px object-cover" />
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
 };

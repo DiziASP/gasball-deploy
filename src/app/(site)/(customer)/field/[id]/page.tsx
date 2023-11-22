@@ -183,7 +183,7 @@ const user_dummy: user_self = {
   role: 'customer',
   created_at: '2021-10-29T07:19:07.945001+00:00',
   updated_at: '2021-10-29T07:19:07.945001+00:00'
-}
+};
 
 async function fetchReservationData(id: string) {
   try {
@@ -208,7 +208,7 @@ async function fetchReservationData(id: string) {
   }
 }
 
-async function getSelf(){
+async function getSelf() {
   try {
     const apiUrl = `http://localhost:3000/api/auth/self`;
     const response = await fetch(apiUrl, {
@@ -224,7 +224,7 @@ async function getSelf(){
     const res = await response.json();
     console.log('Fetched user data:', res);
     return res;
-} catch (error) {
+  } catch (error) {
     console.log(error);
   }
 }
@@ -268,9 +268,11 @@ function convertReservationToTimeSlots(
   return timeSlots;
 }
 
-export default async function FieldDetail({ params }: { params: { id: string } }) {
-
-
+export default async function FieldDetail({
+  params
+}: {
+  params: { id: string };
+}) {
   const res = await fetchFieldData(params.id);
   const lapangan = res.data.field;
   lapangan.datePlots = datePlotsForField;
@@ -282,7 +284,6 @@ export default async function FieldDetail({ params }: { params: { id: string } }
   }
   const res2 = await getSelf();
   // const self = res2.data.user;
-  
 
   return (
     <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
@@ -354,7 +355,6 @@ export default async function FieldDetail({ params }: { params: { id: string } }
                   <button
                     id="bookButton"
                     className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
-                    
                   >
                     <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
                       Book
@@ -368,7 +368,6 @@ export default async function FieldDetail({ params }: { params: { id: string } }
       </div>
 
       <Reservation lapangan={lapangan} user={user_dummy}></Reservation>
-
     </div>
   );
 }
