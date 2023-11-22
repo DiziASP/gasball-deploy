@@ -35,7 +35,7 @@ import { useEffect, useState } from 'react';
 
 async function getAllReservation() {
   try {
-    const origin = process.env.API_URL;
+    const origin = process.env.NEXT_PUBLIC_API_URL;
     const res = await fetch(`${origin}/api/reservation`);
     const data = await res.json();
 
