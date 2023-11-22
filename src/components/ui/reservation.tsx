@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, CalendarProps } from '@/components/ui/calendar'; // Ganti dengan lokasi sebenarnya dari komponen Calendar
 import { DayPicker, DayClickEventHandler } from 'react-day-picker';
 import { ScheduleDay } from './schedule-day';
+import { string } from 'zod';
 
 type oneDaySlot = {
   date: Date;
@@ -28,59 +29,85 @@ type Field = {
   datePlots: oneDaySlot[];
 };
 
-type user_self = {
-  id: string;
-  email: string;
-  username: string;
-  full_name: string;
-  phone_number: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
-};
 
 interface Props {
   lapangan: Field;
-  user: user_self;
+  scheduleData: {
+    orderDate: string;
+    hourRange: number;
+  };
+  onScheduleDataChange: (data: { orderDate: string; hourRange: number }) => void;
+
 }
 
-function searchDate(date: any, datePlots: oneDaySlot[]) {
-  if (date === undefined) return -1;
-  for (let i = 0; i < datePlots.length; i++) {
-    if (datePlots[i].date.getTime() === date.getTime()) {
-      return i;
-    }
-  }
-  return -1;
-}
 
-export const Reservation = ({ lapangan, user }: Props): JSX.Element => {
+export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Props): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedStatusArray, setSelectedStatusArray] = useState<boolean[]>([]);
 
   useEffect(() => {
     // Saat komponen pertama kali dimuat, atur selectedStatusArray sesuai dengan selectedDate (hari ini)
     const todayDate = new Date().setHours(0, 0, 0, 0);
-    const todaySlot = lapangan.datePlots.find(
+    const todaySlot = lapangan?.datePlots.find(
       (slot) => slot.date.setHours(0, 0, 0, 0) === todayDate
     );
     setSelectedStatusArray(todaySlot?.statusArray || []);
   }, []);
 
+  // const handleDayClick: DayClickEventHandler = (day, modifiers, e) => {
+  //   if (modifiers.selected) {
+  //     setSelectedDate(new Date()); // Deselect date if it's already selected
+  //   } else {
+  //     const selected = new Date(day)
+  //     selected.setDate(selected.getDate() + 1)
+  //     setSelectedDate(selected); // Select the clicked date
+  //     // Update selectedStatusArray based on the selected date
+  //     const selectedSlot = lapangan.datePlots.find(
+  //       (slot) => slot.date.getTime() === selected.getTime()
+  //     );
+  //     setSelectedStatusArray(selectedSlot?.statusArray || []);
+  //     console.log(selectedDate.toISOString().split('T')[0]);
+  //   }
+  // };
   const handleDayClick: DayClickEventHandler = (day, modifiers, e) => {
+    const clickedDate = new Date(day);
+  
     if (modifiers.selected) {
       setSelectedDate(new Date()); // Deselect date if it's already selected
     } else {
-      setSelectedDate(day); // Select the clicked date
-      // Update selectedStatusArray based on the selected date
-      const selectedSlot = lapangan.datePlots.find(
-        (slot) => slot.date.getTime() === day.getTime()
-      );
-      setSelectedStatusArray(selectedSlot?.statusArray || []);
-      console.log(selectedDate.toISOString().split('T')[0]);
+      if (selectedDate && clickedDate.getTime() === selectedDate.getTime()) {
+        // If the clicked date is the same as the selected date, deselect it
+        setSelectedDate(new Date());
+      } else {
+        setSelectedDate(clickedDate); // Select the clicked date
+        // Update selectedStatusArray based on the selected date
+        const selectedSlot = lapangan.datePlots.find(
+          (slot) => slot.date.getTime() === clickedDate.getTime()
+        );
+        setSelectedStatusArray(selectedSlot?.statusArray || []);
+        console.log(LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')));
+      }
     }
-    // Lakukan operasi lain yang diperlukan saat tanggal dipilih atau tidak dipilih
   };
+
+  function LocaleDatetoUTCformat(date : string) : string {
+    const arr = date.split('/');
+    const newDate = arr[2] + '-' + arr[0] + '-' + arr[1];
+    return newDate;
+  }
+  
+  const [detailReservation, setDetailReservation] = useState<{
+    orderDate: string;
+    hourRange: number;
+  }>({ orderDate: '', hourRange: 0});
+  const receiveDataFromChild = (dataFromReservation: {
+    orderDate: string;
+    hourRange: number;
+  }) => {
+    const { orderDate, hourRange } = dataFromReservation;
+    setDetailReservation({ orderDate, hourRange });
+  }
+
 
   return (
     <div className="grid gap-2 h-full mb-5 w-fit">
@@ -92,14 +119,15 @@ export const Reservation = ({ lapangan, user }: Props): JSX.Element => {
       <div></div>
       <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
-          key={selectedDate.toISOString().split('T')[0]}
+          key={selectedStatusArray.toString()}
           selectedDate={selectedDate.toISOString().split('T')[0]}
-          price={lapangan.pricePerHour}
+          price={lapangan?.pricePerHour}
           statusArray={selectedStatusArray}
           totalHours={0}
-          fieldID={lapangan.id}
-          customerID={user.id}
-          customerName={user.full_name}
+          onScheduleDataChange={onScheduleDataChange}
+          scheduleData={scheduleData}
+          
+
         ></ScheduleDay>
       </div>
     </div>

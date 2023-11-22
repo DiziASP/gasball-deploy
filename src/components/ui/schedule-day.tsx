@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Schedule } from '@/components/ui/schedule';
 import { useRouter } from 'next/navigation';
 import { on } from 'events';
@@ -13,18 +13,18 @@ interface Props {
   totalHours: number;
   statusArray: boolean[]; // Menambahkan prop statusArray
   price: number;
-  fieldID: string;
-  customerID: string;
-  customerName: string;
+  scheduleData: {
+    orderDate: string;
+    hourRange: number;
+  };
+  onScheduleDataChange: (data: { orderDate: string; hourRange: number }) => void;
+
 }
 
 export const ScheduleDay = ({
-  selectedDate,
+  selectedDate, 
   statusArray,
-  price,
-  fieldID,
-  customerID,
-  customerName
+  price, scheduleData, onScheduleDataChange
 }: Props): JSX.Element => {
   const scheduleTimes = [
     '01.00',
@@ -57,9 +57,14 @@ export const ScheduleDay = ({
   const [scheduleStatus, setScheduleStatus] = React.useState<
     ('booked' | 'default' | 'active' | 'hover')[]
   >([]);
-  const [shouldRender, setShouldRender] = React.useState(false);
+  const handleDataChange  = () => {
+    onScheduleDataChange({
+      orderDate: formatToISO(selectedDate, firstoccurence),
+      hourRange: lastoccurence - firstoccurence + 1
+    });
+  }
 
-  const router = useRouter();
+
   async function checkRangeHours() {
     if (totalHours > 1) {
       const firstoccurence = scheduleStatus.indexOf('active');
@@ -76,6 +81,7 @@ export const ScheduleDay = ({
         console.log(firstoccurence, lastoccurence);
       }
     }
+    handleDataChange();
   }
 
   useEffect(() => {
@@ -91,46 +97,25 @@ export const ScheduleDay = ({
 
   useEffect(() => {
     checkRangeHours();
+
   }, [scheduleStatus]);
 
-  useEffect(() => {
-    checkRangeHours();
-    setShouldRender(true);
-  }, [totalHours < lastoccurence - firstoccurence]);
-
-  function addHours(fieldID: string, customerID: string, customerName: string) {
+  function addHours() {
     setTotalHours(totalHours + 1);
-    checkTotalHours(
-      totalHours + 1,
-      price,
-      fieldID,
-      customerID,
-      customerName,
-      formatToISO(selectedDate, firstoccurence)
-    );
-    console.log(
-      'TES',
-      fieldID,
-      customerID,
-      customerName,
-      formatToISO(selectedDate, firstoccurence)
-    );
+    checkTotalHours(totalHours + 1,price);
+    const firstoccurence = scheduleStatus.indexOf('active');
+    setFirstOccurence(firstoccurence);
+    handleDataChange();
+    console.log('cek add');
+    console.log(scheduleData.orderDate);
   }
 
-  function minOneHour(
-    fieldID: string,
-    customerID: string,
-    customerName: string
-  ) {
+  function minOneHour() {
     setTotalHours(totalHours - 1);
-    checkTotalHours(
-      totalHours - 1,
-      price,
-      fieldID,
-      customerID,
-      customerName,
-      formatToISO(selectedDate, firstoccurence)
-    );
+    checkTotalHours(totalHours - 1,price);
+    const firstoccurence = scheduleStatus.indexOf('active');
+    setFirstOccurence(firstoccurence);
+    handleDataChange();
   }
   function formatToTime(number: number): string {
     const hours = String(number).padStart(2, '0');
@@ -144,14 +129,7 @@ export const ScheduleDay = ({
     return `${str}T${formatToTime(number)}+00:00`;
   }
 
-  function checkTotalHours(
-    totalHours: number,
-    price: number,
-    fieldID: string,
-    customerID: string,
-    customerName: string,
-    orderDate: string
-  ) {
+  function checkTotalHours(totalHours: number, price: number) {
     var button = document.getElementById('bookButton');
     if (totalHours == 0) {
       button?.classList.add('cursor-not-allowed');
@@ -159,25 +137,14 @@ export const ScheduleDay = ({
     } else {
       button?.classList.remove('cursor-not-allowed');
       button?.classList.remove('opacity-50');
-      console.log('masuk');
-      button?.addEventListener('click', () => {
-        handleBookButtonClicked({
-          FieldID: fieldID,
-          CustomerID: customerID,
-          CustomerName: customerName,
-          HourRange: totalHours, // or any appropriate hour value
-          TotalPrice: totalHours * price, // calculate total price here based on totalHours and price
-          orderDate: orderDate
-        });
-      });
     }
     let hoursValueElement = document.getElementById('hoursValue');
-
+  
     if (hoursValueElement) {
       // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
       hoursValueElement.textContent = totalHours.toString();
     }
-
+  
     let priceValueElement = document.getElementById('priceValue');
     if (priceValueElement) {
       // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
@@ -185,46 +152,11 @@ export const ScheduleDay = ({
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
+    handleDataChange();
   }
+  
 
-  const handleBookButtonClicked = async ({
-    FieldID,
-    CustomerID,
-    CustomerName,
-    HourRange,
-    TotalPrice,
-    orderDate
-  }: {
-    FieldID: string;
-    CustomerID: string;
-    CustomerName: string;
-    orderDate: string;
-    HourRange: number;
-    TotalPrice: number;
-  }) => {
-    const apiUrl = `http://localhost:3000/api/reservation`;
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fieldId: FieldID,
-        customerId: CustomerID,
-        customerName: CustomerName,
-        orderDate: orderDate,
-        hourRange: HourRange,
-        totalPrice: TotalPrice
-      })
-    });
-    if (!response.ok) {
-      alert('ga bisa dipost');
-      throw new Error('Network response was not ok');
-    }
-    router.push(`field/${FieldID}/payment`);
-    // const responseData = await response.json();
-    // console.log('Fetched reservation data:', responseData);
-  };
+
 
   return (
     <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
@@ -236,14 +168,14 @@ export const ScheduleDay = ({
             }`}
             status={statusArray[index] ? 'booked' : 'default'}
             onClickFunction={() => {
-              addHours(fieldID, customerID, customerName);
+              addHours();
               setScheduleStatus((prev) => {
                 scheduleStatus[index] = 'active';
                 return [...prev];
               });
             }}
             removeFunction={() => {
-              minOneHour(fieldID, customerID, customerName);
+              minOneHour();
               setScheduleStatus((prev) => {
                 scheduleStatus[index] = 'default';
                 return [...prev];
