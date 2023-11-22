@@ -55,11 +55,11 @@ function extractTime(date: string, range: number) {
   return `${startTime}.00 - ${endTime}.00`;
 }
 
-function orderByOrderDate(a, b) {
+function orderByOrderDate(a: any, b: any) {
   return new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime();
 }
 
-function orderByPaidStatus(a, b) {
+function orderByPaidStatus(a: any, b: any) {
   return a.paidStatus - b.paidStatus;
 }
 
@@ -185,11 +185,11 @@ export default function KeeperHistory() {
                           </TableCell>
                           <TableCell>
                             {row.paidStatus ? (
-                              <Badge className="border-transparent bg-orange-500 hover:bg-orange-500/80">
+                              <Badge className="border-transparent bg-green-500 hover:bg-green-500/80">
                                 Paid
                               </Badge>
                             ) : (
-                              <Badge className="border-transparent bg-green-500 hover:bg-green-500/80">
+                              <Badge className="border-transparent bg-orange-500 hover:bg-orange-500/80">
                                 Unpaid
                               </Badge>
                             )}
