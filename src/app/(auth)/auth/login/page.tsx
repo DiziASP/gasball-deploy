@@ -2,7 +2,6 @@
 import { Brand } from "@/components/brand"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -55,10 +54,7 @@ export default function Login() {
             </div>
             {/* Check box and forget password */}
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-1.5">
-                <Checkbox id="remember-me" />
-                <Label> Remember me</Label>
-              </div>
+              <div></div>
               <div>
                 <Link href="https://wa.me/6281232461738?text=Halo%20gann%20pacar%20bagas%2C%20password%20saya%20lupa%20gmn%20yh%20gan" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Forget password?
