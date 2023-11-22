@@ -84,8 +84,7 @@ async function getAllFieldData() {
     const origin = 'http://localhost:3000';
     const res = await fetch(`${origin}/api/field`);
     const data = await res.json();
-
-    return data;
+    return data['data']['field'];
   } catch (err) {
     console.log(err);
   }
@@ -105,6 +104,11 @@ export default function FieldPage() {
       playerBench: boolean;
       watcherBench: boolean;
       available: boolean;
+      user: {
+        id: string;
+        full_name: string;
+        phone_number: string;
+      };
     }[]
   >([]);
 
@@ -115,7 +119,7 @@ export default function FieldPage() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllFieldData();
-      setData(res['data']);
+      setData(res);
     };
 
     fetchData();
