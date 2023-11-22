@@ -35,8 +35,7 @@ import { useEffect, useState } from 'react';
 
 async function getAllReservation() {
   try {
-    const origin = process.env.NEXT_PUBLIC_API_URL;
-    const res = await fetch(`${origin}/api/reservation`);
+    const res = await fetch(`/api/reservation`);
     const data = await res.json();
 
     return data['data']['reservation'];
@@ -47,8 +46,7 @@ async function getAllReservation() {
 
 async function getReports(year: number) {
   try {
-    const origin = process.env.API_URL;
-    const res = await fetch(`${origin}/api/report/${year}`);
+    const res = await fetch(`/api/report/${year}`);
     const data = await res.json();
 
     return data['data']['report'];

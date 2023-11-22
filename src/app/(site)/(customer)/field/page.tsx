@@ -81,8 +81,7 @@ const lapanganPayload: {
 
 async function getAllFieldData() {
   try {
-    const origin = process.env.NEXT_PUBLIC_API_URL;
-    const res = await fetch(`${origin}/api/field`);
+    const res = await fetch(`/api/field`);
     const data = await res.json();
 
     return data;
