@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Table,
   TableBody,
@@ -8,7 +10,7 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Dropdown from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Pencil2Icon } from '@radix-ui/react-icons';
@@ -28,9 +30,24 @@ async function getAllField(){
 }
 
 
-export default async function FieldManagement() {
+export default function FieldManagement() {
+  const [fields, setFields] = useState([]);
 
-  const fields = await getAllField();
+  // Fungsi untuk mengambil data lapangan dari API
+  const fetchData = async () => {
+    const data = await getAllField();
+    setFields(data);
+  };
+
+  // Fungsi polling untuk mengambil data setiap 5 detik
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); // Interval polling setiap 5 detik (5000 milidetik)
+
+    // Bersihkan interval saat komponen tidak lagi ter-render
+    return () => clearInterval(interval);
+  }, []); // Jalankan sekali saat komponen ter-render
 
   return (
     <div>
