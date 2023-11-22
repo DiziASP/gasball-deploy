@@ -61,7 +61,6 @@ function orderByOrderDate(a, b) {
 
 function orderByPaidStatus(a, b) {
   return a.paidStatus - b.paidStatus;
-
 }
 
 export default function KeeperHistory() {
@@ -118,7 +117,7 @@ export default function KeeperHistory() {
     });
 
     getKeeperFieldReservations().then((data) => {
-      data.sort(orderByOrderDate)
+      data.sort(orderByOrderDate);
       setData(data.reverse());
     });
   }, []);
