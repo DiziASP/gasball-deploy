@@ -81,7 +81,7 @@ const lapanganPayload: {
 
 async function getAllFieldData() {
   try {
-    const origin = 'http://localhost:3000';
+    const origin = process.env.API_URL;
     const res = await fetch(`${origin}/api/field`);
     const data = await res.json();
 

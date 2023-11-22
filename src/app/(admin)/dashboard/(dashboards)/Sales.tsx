@@ -35,7 +35,7 @@ import { useEffect, useState } from 'react';
 
 async function getAllReservation() {
   try {
-    const origin = 'http://localhost:3000';
+    const origin = process.env.API_URL;
     const res = await fetch(`${origin}/api/reservation`);
     const data = await res.json();
 
@@ -47,7 +47,7 @@ async function getAllReservation() {
 
 async function getReports(year: number) {
   try {
-    const origin = 'http://localhost:3000';
+    const origin = process.env.API_URL;
     const res = await fetch(`${origin}/api/report/${year}`);
     const data = await res.json();
 
