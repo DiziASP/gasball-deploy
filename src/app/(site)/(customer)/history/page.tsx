@@ -88,7 +88,7 @@ function dateFormat(date: string){
   const year = dateObj.getFullYear();
   const hour = dateObj.getHours();
   const minute = dateObj.getMinutes();
-  return `${day}/${month}/${year} ${hour}:${minute}`;
+  return `${day}/${month}/${year} ${hour}:${minute < 10 ? '0' + minute : minute}`;
 }
 
 /**
@@ -117,7 +117,7 @@ export default function PurchaseHistory() {
   return (
     <div className="grid bg-gradient-to-r from-[#FDFEFF] to-[#ECF4FF]">
       <div className="grid m-20 gap-10">
-        <h1>Purchase History</h1>
+        <h1>Reservation History</h1>
         <div className="grid rounded-xl shadow-2xl bg-white">
           <div className="m-10">  
             <div>
@@ -138,7 +138,7 @@ export default function PurchaseHistory() {
                       <TableCell>{dateFormat(row.orderDate)}</TableCell>
                       <TableCell>{row.fields.name}</TableCell>
                       <TableCell>{row.hourRange}</TableCell>
-                      <TableCell>{row.totalPrice}</TableCell>
+                      <TableCell>Rp{row.totalPrice}</TableCell>
                       <TableCell>
                         {
                           row.paidStatus ? 
