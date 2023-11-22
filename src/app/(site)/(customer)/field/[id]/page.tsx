@@ -373,6 +373,10 @@ export default function FieldDetail({ params }: { params: { id: string } }) {
       </div>
 
       <Reservation lapangan={lapangan}></Reservation>
+      {/* <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
+          <ScheduleDay price={lapangan.hourlyPrice} statusArray={lapangan.datePlots[1].statusArray} totalHours={0}></ScheduleDay>
+        </div> */}
+      {/* {/* </div> */}
     </div>
   );
 }
