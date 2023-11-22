@@ -1,12 +1,9 @@
 'use client';
 
-
-
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Reservation from '@/components/ui/reservation';
 import React, { useState, useEffect } from 'react';
-
 
 type oneDaySlot = {
   date: Date;
@@ -228,20 +225,16 @@ function convertReservationToTimeSlots(
   return timeSlots;
 }
 
-export default function FieldDetail({
-  params
-}: {
-  params: { id: string };
-}) {
+export default function FieldDetail({ params }: { params: { id: string } }) {
   const id_test = '64e77936-e38e-449d-a008-fc7dde586c3f';
 
   const [datePlotsForField, setDatePlotsForField] = useState<oneDaySlot[]>([]);
   const [reservation, setReservation] = useState<ReservationData[]>([]);
   const [lapangan, setLapangan] = useState<Field>();
 
-useEffect(() => {
-  const fetchData = async () => {
-    const res = await fetchFieldData(id_test);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetchFieldData(id_test);
       const fieldData = res.data.field;
       setLapangan(res.data.field);
       const res2 = await fetchReservationData(id_test);
@@ -253,16 +246,15 @@ useEffect(() => {
         // Update the datePlots in lapangan
         const updatedLapangan = { ...fieldData, datePlots };
         setLapangan(updatedLapangan);
-      } 
-      else {
+      } else {
         const updatedLapangan = { ...fieldData, datePlots: [] };
         setLapangan(updatedLapangan);
       }
-  };
-  console.log(lapangan);
+    };
+    console.log(lapangan);
 
-  fetchData();
-}, []);
+    fetchData();
+  }, []);
 
   // const res = await fetchFieldData(id_test);
   // const lapangan = res.data.field;
@@ -295,8 +287,7 @@ useEffect(() => {
 
     const responseData = await response.json();
     console.log('Fetched reservation data:', responseData);
-
-  }
+  };
 
   return (
     <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
