@@ -313,96 +313,105 @@ export default function FieldDetail({
 
 
   return (
-    <div className="mx-4 my-4 inline-flex flex-nowrap justify-around bg-white py-7 rounded-2xl h-screen">
-      {lapangan?(
-      <><div>
-          <img
-            src="/assets/images/field.jpg"
-            alt=""
-            className="z-1 w-full h-full object-cover rounded-3xl shadow-2xl" />
-          <div className="flex w-148 gap-2 p-4 relative bg-white rounded-[21px] -mt-60 pt-4 px-4 max-h-56 mx-6">
-            <div className="flex flex-col items-start  relative">
-              <div className="relative w-fit -mt-1 font-h-4 font-[number:var(--h-8-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
-                <b className="text-2xl">{lapangan?.name}</b>
-              </div>
-              <p className="relative self-stretch font-body font-[number:var(--body-font-weight)] text-slate-900 text-[length:var(--body-font-size)] tracking-[var(--body-letter-spacing)] leading-[var(--body-line-height)] [font-style:var(--body-font-style)]">
-                {lapangan?.location}
-                <br />
-                {lapangan?.syntheticGrass
-                  ? 'Rumput Sintentis'
-                  : 'Rumput Alami'}{' '}
-                {lapangan?.indoor ? '• Indoor' : '• Outdoor'}{' '}
-                {lapangan?.playerBench && '• Bench Pemain'}{' '}
-                {lapangan?.watcherBench && '• Bench Penonton'}
-              </p>
-
-              <a href="https://wa.me/6281355538777">
-                <div className="inline-flex items-start gap-3 p-2 relative flex-[0_0_auto] bg-slate-100 hover:bg-slate-200 rounded-2xl mt-3">
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div className="inline-flex flex-col items-start gap-[0px] relative flex-[0_0_auto]">
-                    <div className="font-semibold relative w-fit -mt-1 font-small  text-[#000000] text-[length:var(--small-font-size)] tracking-[var(--small-letter-spacing)] leading-[var(--small-line-height)] whitespace-nowrap [font-style:var(--small-font-style)]">
-                      {lapangan?.users.full_name}
-                    </div>
-                    <div className="relative w-[227px] font-small font-[number:var(--subtle-font-weight)] text-slate-500 text-[length:var(--subtle-font-size)] tracking-tight leading-5 [font-style:var(--subtle-font-style)]">
-                      WhatssApp
-                      <br />
-                      {lapangan?.users.phone_number}
-                    </div>
+    <div className='grid w-full h-fit my-5 place-content-center'>
+      <div className="flex w-fit min-w-[80%] h-fit mx-4 my-4 p-7 bg-white rounded-2xl h-screen">
+        {lapangan?(
+        <div className='flex flex-row h-fit gap-5'>
+          <div className='grid w-full h-fit place-content-center'>
+            <img
+              src="/assets/images/field.jpg"
+              alt=""
+              className="z-1 w-full h-full object-cover rounded-3xl shadow-2xl" />
+            <div className='flex w-full'>
+              <div className="flex flex-row z-2 w-full h-fit gap-10 p-5 bg-white rounded-[21px] -mt-60 m-5">
+                <div className="flex flex-col">
+                  <div className='mb-2'>
+                    <b className="text-2xl leading-normal">{lapangan?.name}</b>
                   </div>
-                </div>
-              </a>
-            </div>
-            <div className="inline-block h-20 w-0.5 self-stretch bg-neutral-200 opacity-100 dark:opacity-50"></div>
-            <div className="flex flex-col items-end relative flex-1 self-stretch grow">
-              <div className="relative w-fit mt-[-1.00px] font-h-4 font-[number:var(--h-4-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
-                <b className="text-xl">
-                  Rp{' '}
-                  {lapangan?.pricePerHour
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
-                  /Jam
-                </b>
-              </div>
-              <div className="inline-flex flex-col items-end justify-end relative flex-1 grow">
-                <div className="inline-flex flex-col items-end gap-[10px] relative flex-[0_0_auto]">
-                  <p
-                    id="totalhours"
-                    className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]"
-                  >
-                    <span id="hoursValue">0</span> Jam
+                  <text className="relative self-stretch font-body font-[number:var(--body-font-weight)] text-slate-900 text-[length:var(--body-font-size)] tracking-[var(--body-letter-spacing)] leading-normal [font-style:var(--body-font-style)]">
+                    {lapangan?.location}
                     <br />
-                  </p>
-                  <div className="inline-flex items-center justify-end gap-[10px] relative flex-[0_0_auto]">
-                    <div className="relative w-fit [font-family:'Inter-Bold',Helvetica] font-bold text-slate-900 text-[20px] tracking-[0] leading-[20px] whitespace-nowrap">
-                      Rp <span id="priceValue">0</span>{' '}
-                    </div>
-                    <button
-                      id="bookButton"
-                      className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
-                      onClick={() => {
-                        handleBookButtonClicked({
-                          FieldID: lapangan.id,
-                          CustomerID: user_dummy.id,
-                          CustomerName: user_dummy.full_name,
-                          HourRange: scheduleData.hourRange,
-                          TotalPrice: scheduleData.hourRange * lapangan.pricePerHour,
-                          orderDate: scheduleData.orderDate
-                        });
-                      }}
-                    >
-                      <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
-                        Book
+                    {lapangan?.syntheticGrass
+                      ? 'Rumput Sintentis'
+                      : 'Rumput Alami'}{' '}
+                    {lapangan?.indoor ? '• Indoor' : '• Outdoor'}{' '}
+                    {lapangan?.playerBench && '• Bench Pemain'}{' '}
+                    {lapangan?.watcherBench && '• Bench Penonton'}
+                  </text>
+
+                  <a href="https://wa.me/6281355538777">
+                    <div className="inline-flex items-start gap-3 p-2 relative flex-[0_0_auto] bg-slate-100 hover:bg-slate-200 rounded-2xl mt-3">
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div className="inline-flex flex-col items-start gap-[0px] relative flex-[0_0_auto]">
+                        <div className="font-semibold relative w-fit -mt-1 font-small  text-[#000000] text-[length:var(--small-font-size)] tracking-[var(--small-letter-spacing)] leading-[var(--small-line-height)] whitespace-nowrap [font-style:var(--small-font-style)]">
+                          {lapangan?.users.full_name}
+                        </div>
+                        <div className="relative w-[227px] font-small font-[number:var(--subtle-font-weight)] text-slate-500 text-[length:var(--subtle-font-size)] tracking-tight leading-5 [font-style:var(--subtle-font-style)]">
+                          WhatssApp
+                          <br />
+                          {lapangan?.users.phone_number}
+                        </div>
                       </div>
-                    </button>
+                    </div>
+                  </a>
+                </div>
+                <div className="inline-block h-20 w-0.5 self-stretch bg-neutral-200 opacity-100 dark:opacity-50"></div>
+                <div className="flex flex-col items-end relative flex-1 self-stretch grow">
+                  <div className="relative w-fit mt-[-1.00px] font-h-4 font-[number:var(--h-4-font-weight)] text-slate-900 text-[length:var(--h-4-font-size)] tracking-[var(--h-4-letter-spacing)] leading-[var(--h-4-line-height)] whitespace-nowrap [font-style:var(--h-4-font-style)]">
+                    <b className="text-xl">
+                      Rp{' '}
+                      {lapangan?.pricePerHour
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+                      /Jam
+                    </b>
+                  </div>
+                  <div className="inline-flex flex-col items-end justify-end relative flex-1 grow">
+                    <div className="inline-flex flex-col items-end gap-[10px] relative flex-[0_0_auto]">
+                      <p
+                        id="totalhours"
+                        className="relative w-fit mt-[-1.00px] [font-family:'Inter-Regular',Helvetica] font-normal text-[#64748b] text-[12px] tracking-[0] leading-[16px]"
+                      >
+                        <span id="hoursValue">0</span> Jam
+                        <br />
+                      </p>
+                      <div className="inline-flex items-center justify-end gap-[10px] relative flex-[0_0_auto]">
+                        <div className="relative w-[120px] [font-family:'Inter-Bold',Helvetica] font-bold text-slate-900 text-[20px] tracking-[0] leading-[20px] whitespace-nowrap">
+                          Rp <span id="priceValue">0</span>{' '}
+                        </div>
+                        <button
+                          id="bookButton"
+                          className="cursor-not-allowed opacity-50 inline-flex items-center justify-center gap-[10px] px-[16px] py-[8px] relative flex-[0_0_auto] bg-[#0f172a] rounded-[6px] all-[unset] box-border"
+                          onClick={() => {
+                            handleBookButtonClicked({
+                              FieldID: lapangan.id,
+                              CustomerID: user_dummy.id,
+                              CustomerName: user_dummy.full_name,
+                              HourRange: scheduleData.hourRange,
+                              TotalPrice: scheduleData.hourRange * lapangan.pricePerHour,
+                              orderDate: scheduleData.orderDate
+                            });
+                          }}
+                        >
+                          <div className="relative w-fit mt-[-1.00px] font-body-medium font-[number:var(--body-medium-font-weight)] text-[#ffffff] text-[length:var(--body-medium-font-size)] tracking-[var(--body-medium-letter-spacing)] leading-[var(--body-medium-line-height)] whitespace-nowrap [font-style:var(--body-medium-font-style)]">
+                            Book
+                          </div>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div><Reservation lapangan={lapangan} scheduleData={scheduleData} onScheduleDataChange={handleScheduleDataChange} ></Reservation></>) : (<h1 className='pt-48'>loading..</h1>)}
+          <div className='flex w-fit h-[800px]'>
+            <Reservation lapangan={lapangan} scheduleData={scheduleData} onScheduleDataChange={handleScheduleDataChange}></Reservation>
+          </div>
+        </div>) : (<h1 className='pt-48'>loading..</h1>)}
+      </div>
     </div>
   );
 }

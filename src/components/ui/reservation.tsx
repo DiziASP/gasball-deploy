@@ -105,14 +105,15 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
 
 
   return (
-    <div className="grid gap-2 h-full mb-5 w-fit">
-      <Calendar
-        selected={selectedDate}
-        onDayClick={handleDayClick}
-        className="h-full w-full bg-white rounded-2xl shadow-xl"
-      />
-      <div></div>
-      <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
+    <div className="grid gap-5 h-full mb-5 w-[320px]">
+      <div className='grid w-full place-content-center bg-white  rounded-2xl shadow-xl'>
+        <Calendar
+          selected={selectedDate}
+          onDayClick={handleDayClick}
+          className="h-full w-full bg-white"
+        />
+      </div>
+      <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
           key={selectedStatusArray.toString()}
           selectedDate={LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')).split('T')[0]}
