@@ -236,6 +236,7 @@ interface ScheduleData {
   hourRange: number;
 }
 
+
 export default function FieldDetail({
   params
 }: {

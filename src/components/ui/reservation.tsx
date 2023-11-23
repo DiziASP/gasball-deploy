@@ -108,10 +108,9 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
       <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
           key={selectedStatusArray.toString()}
-          selectedDate={selectedDate.toISOString().split('T')[0]}
+          selectedDate={LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')).split('T')[0]}
           price={lapangan?.pricePerHour}
           statusArray={selectedStatusArray}
-          totalHours={0}
           onScheduleDataChange={onScheduleDataChange}
           scheduleData={scheduleData}
         ></ScheduleDay>

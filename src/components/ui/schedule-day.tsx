@@ -2,22 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import { Schedule } from '@/components/ui/schedule';
-import { useRouter } from 'next/navigation';
-import { on } from 'events';
-import { add, set } from 'date-fns';
-import { stat } from 'fs';
-import { format } from 'path';
+
 
 interface Props {
   selectedDate: string;
-  totalHours: number;
   statusArray: boolean[]; // Menambahkan prop statusArray
   price: number;
   scheduleData: {
     orderDate: string;
     hourRange: number;
   };
-  onScheduleDataChange: (data: { orderDate: string; hourRange: number }) => void;
+  onScheduleDataChange: (data: { orderDate: string; hourRange: number}) => void;
 
 }
 
@@ -51,72 +46,28 @@ export const ScheduleDay = ({
     '22.00',
     '23.00'
   ];
+  // const [firstoccurence, setFirstOccurence] = React.useState(-1);
+  // const [lastoccurence, setLastOccurence] = React.useState(-1);
   const [totalHours, setTotalHours] = React.useState(0);
-  const [firstoccurence, setFirstOccurence] = React.useState(0);
-  const [lastoccurence, setLastOccurence] = React.useState(0);
+  const [activeStatus, setActiveStatus] = React.useState<number[]>([]);
   const [scheduleStatus, setScheduleStatus] = React.useState<
     ('booked' | 'default' | 'active' | 'hover')[]
   >([]);
   const handleDataChange  = () => {
     onScheduleDataChange({
-      orderDate: formatToISO(selectedDate, firstoccurence),
-      hourRange: lastoccurence - firstoccurence + 1
+      orderDate: formatToISO(selectedDate, Math.min(...activeStatus)),
+      hourRange: totalHours,
     });
   }
 
-
-  async function checkRangeHours() {
-    if (totalHours > 1) {
-      const firstoccurence = scheduleStatus.indexOf('active');
-      setFirstOccurence(firstoccurence);
-      const lastoccurence = scheduleStatus.lastIndexOf('active');
-      setLastOccurence(lastoccurence);
-
-      if (firstoccurence !== lastoccurence) {
-        for (let i = firstoccurence; i <= lastoccurence; i++) {
-          scheduleStatus[i] = 'active';
-        }
-        console.log('cek range');
-        console.log(scheduleStatus);
-        console.log(firstoccurence, lastoccurence);
-      }
-    }
-    handleDataChange();
-  }
-
   useEffect(() => {
-    // Inisialisasi scheduleStatus dengan nilai dari statusArray saat komponen dimuat
-    const initialScheduleStatus = statusArray.map((status) =>
-      status ? 'booked' : 'default'
-    );
-    if (statusArray.length === 0) {
-      for (let i = 0; i < 24; i++) initialScheduleStatus.push('default');
-    }
-    setScheduleStatus(initialScheduleStatus);
-  }, []);
-
-  useEffect(() => {
-    checkRangeHours();
-
-  }, [scheduleStatus]);
-
-  function addHours() {
-    setTotalHours(totalHours + 1);
-    checkTotalHours(totalHours + 1,price);
-    const firstoccurence = scheduleStatus.indexOf('active');
-    setFirstOccurence(firstoccurence);
+    checkTotalHours(totalHours,price);
     handleDataChange();
-    console.log('cek add');
-    console.log(scheduleData.orderDate);
-  }
+  }, [totalHours, activeStatus]);
 
-  function minOneHour() {
-    setTotalHours(totalHours - 1);
-    checkTotalHours(totalHours - 1,price);
-    const firstoccurence = scheduleStatus.indexOf('active');
-    setFirstOccurence(firstoccurence);
-    handleDataChange();
-  }
+
+
+
   function formatToTime(number: number): string {
     const hours = String(number).padStart(2, '0');
     const minutes = '00';
@@ -128,58 +79,86 @@ export const ScheduleDay = ({
   function formatToISO(str: string, number: number): string {
     return `${str}T${formatToTime(number)}+00:00`;
   }
-
+  
   function checkTotalHours(totalHours: number, price: number) {
+
+    console.log("total hours", totalHours);
+    var selisih = Math.max(...activeStatus) - Math.min(...activeStatus) + 1;
+    if (selisih == -Infinity) {
+      selisih = 1;
+    }
     var button = document.getElementById('bookButton');
     if (totalHours == 0) {
       button?.classList.add('cursor-not-allowed');
       button?.classList.add('opacity-50');
-    } else {
+    } 
+    else if (!(totalHours===(selisih))){
+      console.log("masuk sini");
+      console.log("total sm selisih",totalHours, selisih);
+      button?.classList.add('cursor-not-allowed');
+      button?.classList.add('opacity-50');
+    } 
+    else {
       button?.classList.remove('cursor-not-allowed');
       button?.classList.remove('opacity-50');
     }
     let hoursValueElement = document.getElementById('hoursValue');
-  
+    
     if (hoursValueElement) {
+      console.log("mek", totalHours)
       // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
       hoursValueElement.textContent = totalHours.toString();
     }
-  
+    
     let priceValueElement = document.getElementById('priceValue');
     if (priceValueElement) {
       // Ubah teks dari elemen <span> sesuai dengan nilai totalHours
       priceValueElement.textContent = (totalHours * price)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    }
+      }
     handleDataChange();
   }
   
+  useEffect(() => {
+    // Inisialisasi scheduleStatus dengan nilai dari statusArray saat komponen dimuat
+    const initialScheduleStatus = statusArray.map((status) =>
+    status ? 'booked' : 'default'
+    );
+    if (statusArray.length === 0) {
+      for (let i = 0; i < 24; i++) initialScheduleStatus.push('default');
+    }
+    setScheduleStatus(initialScheduleStatus);
+    checkTotalHours(totalHours,price);
+  }, []);
 
-
-
+  
+  
+  
   return (
     <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
+      <div>
+        <p>{Math.min(...activeStatus)}</p>
+        <p>{Math.max(...activeStatus)}</p>
+        <p>{totalHours}</p>
+      </div>
       {scheduleStatus.map((status, index) => (
         <React.Fragment key={index}>
           <Schedule
             className={`!relative mt-[-4px] ${
               statusArray[index] ? 'booked' : ''
             }`}
-            status={statusArray[index] ? 'booked' : 'default'}
+            status={scheduleStatus[index] || 'default'}
             onClickFunction={() => {
-              addHours();
-              setScheduleStatus((prev) => {
-                scheduleStatus[index] = 'active';
-                return [...prev];
-              });
+              setActiveStatus([...activeStatus, index]);
+              setTotalHours(totalHours + 1);
+
+              
             }}
             removeFunction={() => {
-              minOneHour();
-              setScheduleStatus((prev) => {
-                scheduleStatus[index] = 'default';
-                return [...prev];
-              });
+              setActiveStatus(activeStatus.filter((i) => i !== index));
+              setTotalHours(totalHours - 1);
+
             }}
           />
 
