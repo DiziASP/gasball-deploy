@@ -10,14 +10,15 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropdown from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Pencil2Icon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
-
-
-async function getAllField(){
+async function getAllField() {
   try {
     const origin = 'http://localhost:3000';
     const res = await fetch(`${origin}/api/field`);
@@ -29,6 +30,83 @@ async function getAllField(){
   }
 }
 
+interface DeleteConfirmationPopupProps {
+  onDelete: () => void;
+  onCancel: () => void;
+  id : string;
+  name : string;
+  location : string;
+  syntheticGrass : boolean;
+  indoor : boolean;
+  playerBench : boolean;
+  watcherBench : boolean;
+}
+
+async function deleteField(id: string) {
+  try {
+    const origin = 'http://localhost:3000';
+    const res = await fetch(`${origin}/api/field/${id}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
+  onDelete,
+  onCancel,
+  id,
+  name,
+  location,
+  syntheticGrass,
+  indoor,
+  playerBench,
+  watcherBench
+}) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="gap-5 bg-white w-3/4 h-2/3 p-20 m-20 rounded-3xl block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <h2 className='p-5 text-center' >Konfirmasi hapus lapangan</h2>
+        <div className="flex pt-10 px-10 gap-4">
+          <Image
+                    src="/assets/images/field.jpg"
+                    alt=""
+                    width={180}
+                    height={280}
+                  />
+          <div className='flex-col justify-center'>
+            <h3 className="h-24"> {name}</h3>
+            <h4 className="pt-2"> {location}</h4>
+            <p className='font-medium text-base'> {syntheticGrass ? 'Rumput Sintentis' : 'Rumput Alami'}
+            {indoor ? ' | Indoor' : ' | Outdoor'
+            } {playerBench && '| Bench Pemain'} {watcherBench && '| Bench Penonton'
+            } </p>
+          </div>
+        </div>
+        <div className='flex w-full px-10 pt-10 gap-5 items-center  justify-center'>
+        <Button
+              className="w-3/4 h-14 rounded-xl"
+              type="submit"
+              variant={'destructive'}
+              onClick={onDelete}
+            >
+              Hapus
+            </Button>
+            <Button
+              className=" w-3/4 h-14 rounded-xl"
+              variant={'outline'}
+              onClick={onCancel}
+            >
+              Batal
+            </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function FieldManagement() {
   const [fields, setFields] = useState([]);
@@ -43,11 +121,28 @@ export default function FieldManagement() {
   useEffect(() => {
     const interval = setInterval(() => {
       fetchData();
-    }, 5000); // Interval polling setiap 5 detik (5000 milidetik)
+    }, 500); // Interval polling setiap 5 detik (5000 milidetik)
 
     // Bersihkan interval saat komponen tidak lagi ter-render
     return () => clearInterval(interval);
   }, []); // Jalankan sekali saat komponen ter-render
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleDelete = () => {
+    deleteField(String(selectedField));
+    setShowPopup(false);
+  };
+
+  const handleCancel = () => {
+    // Batalkan tindakan hapus dan sembunyikan pop-up
+    setShowPopup(false);
+  };
+  const [selectedField, setSelectedField] = useState('');
+  const handleShowPopup = (fieldId: string) => {
+    setSelectedField(fieldId);
+    setShowPopup(true);
+  };
 
   return (
     <div>
@@ -72,7 +167,7 @@ export default function FieldManagement() {
               <Table>
                 <TableCaption>Data Lapangan</TableCaption>
                 <TableHeader>
-                  <TableRow className='font-medium'>
+                  <TableRow className="font-medium">
                     <TableCell>Nama</TableCell>
                     <TableCell>Lokasi</TableCell>
                     <TableCell>Fasilitas</TableCell>
@@ -82,29 +177,65 @@ export default function FieldManagement() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {fields.map((row: { id: React.Key | null | undefined; name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; location: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; syntheticGrass: any; Indoor: any; playerBench: any; watcherBench: any; users: { full_name: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | React.PromiseLikeOfReactNode | null | undefined; }; pricePerHour: { toString: () => string; }; }) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.location}</TableCell>
-                      <TableCell>
-                      {row.syntheticGrass
-                      ? 'Rumput Sintentis'
-                      : 'Rumput Alami'}{' '}
-                    {row.Indoor ? '| Indoor' : '| Outdoor'}{' '}
-                    {row.playerBench && '| Bench Pemain'}{' '}
-                    {row.watcherBench && '| Bench Penonton'}
+                  {fields.map(
+                    (row: {
+                      id: React.Key | null | undefined;
+                      name:
+                        | string
+                        | undefined;
+                      location:
+                        | string
+                        
+                        | undefined;
+                      syntheticGrass: any;
+                      Indoor: any;
+                      playerBench: any;
+                      watcherBench: any;
+                      users: {
+                        full_name:
+                          | string
+                         
+                          | undefined;
+                      };
+                      pricePerHour: { toString: () => string };
+                    }) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.location}</TableCell>
+                        <TableCell>
+                          {row.syntheticGrass
+                            ? 'Rumput Sintentis'
+                            : 'Rumput Alami'}{' '}
+                          {row.Indoor ? '| Indoor' : '| Outdoor'}{' '}
+                          {row.playerBench && '| Bench Pemain'}{' '}
+                          {row.watcherBench && '| Bench Penonton'}
                         </TableCell>
-                      <TableCell>{row.users.full_name}</TableCell>
-                      <TableCell>Rp {row.pricePerHour.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} ,00</TableCell>
-                      <TableCell>
-                        <Link href={`dashboard/field/${row.id}/edit`}>
-                          <button>
-                            <Pencil2Icon />
-                          </button>
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell>{row.users.full_name}</TableCell>
+                        <TableCell>
+                          Rp{' '}
+                          {row.pricePerHour
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+                          ,00
+                        </TableCell>
+                        <TableCell>
+                          <Link href={`dashboard/field/${row.id}/edit`}>
+                            <button >
+                              <Pencil2Icon />
+                            </button>
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                            <button onClick={() => handleShowPopup(String(row.id))}>
+                              <TrashIcon />
+                            </button>
+                          {showPopup && selectedField===row.id && (
+        <DeleteConfirmationPopup onDelete={handleDelete} onCancel={handleCancel} name={row.name} id={row.id} location={row.location}  syntheticGrass={row.syntheticGrass} indoor={row.indoor} playerBench={row.playerBench} watcherBench={row.watcherBench}/>
+      )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>

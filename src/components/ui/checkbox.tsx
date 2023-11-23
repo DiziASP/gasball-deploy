@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 interface CheckboxProps {
   label: string;
   onChange: (checked: boolean) => void; // Fungsi onChange untuk mengirim nilai terpilih
