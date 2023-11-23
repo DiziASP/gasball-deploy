@@ -5,14 +5,57 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 /**
  * Register Page
  * @returns The register page component.
  */
+
+async function getSelf() {
+  try {
+    const apiUrl = `http://localhost:3000/api/auth/self`;
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const res = await response.json();
+    if (res.status == 'error') {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 export default function Register(formData: any) {
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkLoginStatus() {
+      try {
+        if (await getSelf()) {
+          router.push('/');
+        }
+      } catch (error) {
+        console.error('Error checking login status: ', error);
+      }
+    }
+
+    checkLoginStatus();
+  }, []);
+
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -24,8 +67,6 @@ export default function Register(formData: any) {
   const [failmsg, setFailmsg] = useState("Gagal masuk, coba periksa kembali email dan password Anda!")
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
-
-  const router = useRouter();
 
   return (
     <div className="flex w-full px-40 py-20 items-center justify-center">
