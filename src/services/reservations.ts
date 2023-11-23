@@ -31,7 +31,7 @@ export const getReservations = async (reservationFilter: ReservationFilter) => {
     .from('reservations')
     .select('*, fields (id, name), users (id, username, full_name)');
 
-  console.log(yearStart, monthStart, yearEnd, monthEnd);
+  // console.log(yearStart, monthStart, yearEnd, monthEnd);
 
   if (paidStatus !== null) {
     query.eq('paidStatus', paidStatus);
