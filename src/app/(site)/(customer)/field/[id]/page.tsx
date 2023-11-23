@@ -183,7 +183,6 @@ async function getSelf() {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-
     const res = await response.json();
     console.log('Fetched user data:', res);
     return res;
@@ -228,6 +227,7 @@ function convertReservationToTimeSlots(
     }
   });
 
+  console.log('Converted reservation data:', timeSlots);
   return timeSlots;
 }
 

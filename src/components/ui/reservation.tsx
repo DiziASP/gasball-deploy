@@ -54,21 +54,6 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
     setSelectedStatusArray(todaySlot?.statusArray || []);
   }, []);
 
-  // const handleDayClick: DayClickEventHandler = (day, modifiers, e) => {
-  //   if (modifiers.selected) {
-  //     setSelectedDate(new Date()); // Deselect date if it's already selected
-  //   } else {
-  //     const selected = new Date(day)
-  //     selected.setDate(selected.getDate() + 1)
-  //     setSelectedDate(selected); // Select the clicked date
-  //     // Update selectedStatusArray based on the selected date
-  //     const selectedSlot = lapangan.datePlots.find(
-  //       (slot) => slot.date.getTime() === selected.getTime()
-  //     );
-  //     setSelectedStatusArray(selectedSlot?.statusArray || []);
-  //     console.log(selectedDate.toISOString().split('T')[0]);
-  //   }
-  // };
   const handleDayClick: DayClickEventHandler = (day, modifiers, e) => {
     const clickedDate = new Date(day);
   
@@ -82,10 +67,13 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
         setSelectedDate(clickedDate); // Select the clicked date
         // Update selectedStatusArray based on the selected date
         const selectedSlot = lapangan.datePlots.find(
-          (slot) => slot.date.getTime() === clickedDate.getTime()
+          (slot) => {
+            return LocaleDatetoUTCformat(slot.date.toLocaleDateString('en-US')) === LocaleDatetoUTCformat(clickedDate.toLocaleDateString('en-US'))
+          }
         );
+        console.log("Selected slot", selectedSlot);
         setSelectedStatusArray(selectedSlot?.statusArray || []);
-        console.log(LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')));
+        // console.log(LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')));
       }
     }
   };
@@ -126,8 +114,6 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
           totalHours={0}
           onScheduleDataChange={onScheduleDataChange}
           scheduleData={scheduleData}
-          
-
         ></ScheduleDay>
       </div>
     </div>
