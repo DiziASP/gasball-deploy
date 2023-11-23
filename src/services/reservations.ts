@@ -17,7 +17,7 @@ export const createReservation = async (
   const query = supabase
     .from('reservations')
     .insert([{ ...reservationPayload }])
-    .select('*, fields (id, name), users (id, username, full_name)')
+    .select('*, fields (*), users (*)')
     .single();
   const { data, error } = await query;
   return { data, error };
@@ -29,7 +29,7 @@ export const getReservations = async (reservationFilter: ReservationFilter) => {
   const supabase = createClient(cookies());
   const query = supabase
     .from('reservations')
-    .select('*, fields (id, name), users (id, username, full_name)');
+    .select('*, fields (*), users (*)');
 
   console.log(yearStart, monthStart, yearEnd, monthEnd);
 
@@ -56,7 +56,7 @@ export const getReservationById = async (id: string | null | undefined) => {
   const supabase = createClient(cookies());
   const query = supabase
     .from('reservations')
-    .select('*, fields (id, name), users (id, username, full_name)')
+    .select('*, fields (*), users (*)')
     .eq('id', id as string)
     .single();
   const { data, error } = await query;
@@ -69,7 +69,7 @@ export const getReservationByFieldId = async (
   const supabase = createClient(cookies());
   const query = supabase
     .from('reservations')
-    .select('*, fields (id, name), users (id, username, full_name)')
+    .select('*, fields (*), users (*)')
     .eq('fieldId', fieldId as string);
   const { data, error } = await query;
   return { data, error };
@@ -81,7 +81,7 @@ export const getReservationByCustomerId = async (
   const supabase = createClient(cookies());
   const query = supabase
     .from('reservations')
-    .select('*, fields (id, name), users (id, username, full_name)')
+    .select('*, fields (*), users (*)')
     .eq('customerId', customerId as string);
   const { data, error } = await query;
   return { data, error };
@@ -94,7 +94,7 @@ export const getReservationByKeeperId = async (
   const query = supabase
     .from('reservations')
     .select(
-      '*, fields!inner (id, name, keeperId), users (id, username, full_name)'
+      '*, fields!inner (*, keeperId), users (*)'
     )
     .eq('fields.keeperId', keeperId as string);
   const { data, error } = await query;
@@ -107,7 +107,7 @@ export const payReservation = async (id: string | null | undefined) => {
     .from('reservations')
     .update({ paidStatus: true })
     .eq('id', id as string)
-    .select('*, fields (id, name), users (id, username, full_name)')
+    .select('*, fields (*), users (*)')
     .single();
   const { data, error } = await query;
   return { data, error };
