@@ -56,6 +56,13 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
 
   const handleDayClick: DayClickEventHandler = (day, modifiers, e) => {
     const clickedDate = new Date(day);
+
+    // if clicked day less than yesterday, do nothing
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (clickedDate < yesterday) {
+      return;
+    }
   
     if (modifiers.selected) {
       setSelectedDate(new Date()); // Deselect date if it's already selected

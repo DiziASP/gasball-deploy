@@ -137,11 +137,6 @@ export const ScheduleDay = ({
   
   return (
     <div className="flex flex-col w-[300px] items-end px-4 pt-[15px] py-4 relative bg-[#ffffff] rounded-[23px] shadow-shadow text-[12px]">
-      <div>
-        <p>{Math.min(...activeStatus)}</p>
-        <p>{Math.max(...activeStatus)}</p>
-        <p>{totalHours}</p>
-      </div>
       {scheduleStatus.map((status, index) => (
         <React.Fragment key={index}>
           <Schedule
