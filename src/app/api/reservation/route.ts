@@ -5,6 +5,7 @@ import {
   createReservation,
   getReservationByCustomerId,
   getReservationByFieldId,
+  getReservationByKeeperId,
   getReservations
 } from '@/services/reservations';
 
@@ -12,6 +13,7 @@ export async function GET(request: NextRequest) {
   const searchQuery = request.nextUrl.searchParams;
   const fieldId = searchQuery.get('fieldId');
   const customerId = searchQuery.get('customerId');
+  const keeperId = searchQuery.get('keeperId');
   const filters: ReservationFilter = {
     yearStart:
       searchQuery.get('yearStart') !== null
@@ -41,6 +43,8 @@ export async function GET(request: NextRequest) {
     ({ data, error } = await getReservationByFieldId(fieldId));
   } else if (customerId) {
     ({ data, error } = await getReservationByCustomerId(customerId));
+  } else if (keeperId) {
+    ({ data, error } = await getReservationByKeeperId(keeperId));
   } else {
     ({ data, error } = await getReservations(filters));
   }
