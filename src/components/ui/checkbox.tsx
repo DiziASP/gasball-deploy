@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 
 interface CheckboxProps {
   label: string;
+  onChange: (checked: boolean) => void; // Fungsi onChange untuk mengirim nilai terpilih
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, onChange }) => {
   const [checked, setChecked] = useState(false);
 
   const handleCheckboxChange = () => {
-    setChecked(!checked);
+    const updatedChecked = !checked; // Inversi nilai saat checkbox diklik
+    setChecked(updatedChecked);
+    onChange(updatedChecked); // Panggil fungsi onChange dengan nilai yang baru
   };
 
   return (

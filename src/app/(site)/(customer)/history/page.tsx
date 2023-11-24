@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import CustomerHistory from './(histories)/CustomerHistory';
 import KeeperHistory from './(histories)/KeeperHistory';
@@ -44,11 +43,12 @@ export default function History() {
   }, []);
 
   return (
-    <div className="flex flex-col flex-1 px-14 py-12 bg-background-dashboard">
-      {user?.role === 'penjaga' ? (
+    <div className="flex flex-col flex-1 px-14 py-12 bg-gradient-to-r from-[#FDFEFF] to-[#ECF4FF]">
+      {user?.role == 'pelanggan' ? (
+        <CustomerHistory />
+      ) : (
         <KeeperHistory keeperId={user?.id as string} />
-      ) : // <UserHistory /> ini history ojan nanti
-      null}
+      )}
     </div>
   );
 }
