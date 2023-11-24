@@ -2,10 +2,8 @@ import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import '@/styles/globals.css';
 import { cn } from '@/lib/utils';
-import { Navigation } from '@/components/navbar';
-import { Footer } from '@/components/footer';
-import { AuthProvider } from '@/components/AuthProvider';
-import { createClient } from '@/lib/supabase/client';
+
+import AppWrapper from './Wrapper';
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -13,8 +11,8 @@ export const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: 'GasBall',
-  description: 'GasBall adalah aplikasi untuk manajemen lapangan futsal'
+  title: 'Gasball',
+  description: 'Futsal Field Booking App'
 };
 
 export default function RootLayout({
@@ -22,8 +20,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -32,13 +28,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <AuthProvider>
-          <Navigation />
-          <main className="mantialiased flex flex-col min-w-full flex-1">
-            {children}
-          </main>
-          <Footer />
-        </AuthProvider>
+        <AppWrapper>{children}</AppWrapper>
       </body>
     </html>
   );
