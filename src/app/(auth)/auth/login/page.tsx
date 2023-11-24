@@ -153,7 +153,7 @@ export default function Login() {
           {/* Sign up */}
           <div className="flex items-center gap-1.5 mt-20">
             <p className="text-sm font-normal leading-none">
-              Don't have an account?
+              Don{"'"}t have an account?
             </p>
             <Link
               href="/auth/register"
