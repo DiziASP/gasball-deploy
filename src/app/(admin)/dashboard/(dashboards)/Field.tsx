@@ -149,7 +149,7 @@ export default async function FieldManagement() {
   return (
     <div>
       <div className="grid m-20 gap-10">
-        <div className="flex inline-flex justify-between">
+        <div className="flex justify-between">
           <h1>Data Lapangan</h1>
           <Link href={`dashboard/field/add-field`}>
             <button
