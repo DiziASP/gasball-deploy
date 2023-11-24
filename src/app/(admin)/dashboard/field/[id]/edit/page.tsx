@@ -61,16 +61,24 @@ export default function EditField({ params }: { params: { id: string } }) {
       setField(data);
     };
     fetchData();
-  }, []);
+  });
 
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [pricePerHour, setPricePerHour] = useState(0);
-  const [syntheticGrass, setSyntheticGrass] = useState<boolean>(false);
-  const [indoor, setIndoor] = useState<boolean>(false);
-  const [playerBench, setPlayerBench] = useState<boolean>(false);
-  const [watcherBench, setWatcherBench] = useState<boolean>(false);
-  const [available, setAvailable] = useState<boolean>(false);
+  const [pricePerHour, setPricePerHour] = useState<Number | undefined>(
+    undefined
+  );
+  const [syntheticGrass, setSyntheticGrass] = useState<boolean | undefined>(
+    undefined
+  );
+  const [indoor, setIndoor] = useState<boolean | undefined>(undefined);
+  const [playerBench, setPlayerBench] = useState<boolean | undefined>(
+    undefined
+  );
+  const [watcherBench, setWatcherBench] = useState<boolean | undefined>(
+    undefined
+  );
+  const [available, setAvailable] = useState<boolean>(true);
   const [keeperId, setkeeperId] = useState('');
 
   const handleSubmit = async () => {
@@ -114,7 +122,7 @@ export default function EditField({ params }: { params: { id: string } }) {
     setLocation(e.target.value);
   };
   const handlePricePerHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPricePerHour(e.target.value);
+    setPricePerHour(Number(e.target.value));
   };
   const handleKeeperIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setkeeperId(e.target.value);
@@ -169,7 +177,7 @@ export default function EditField({ params }: { params: { id: string } }) {
               <Label>Harga/Jam</Label>
               <Input
                 type="number"
-                placeholder={field?.pricePerHour}
+                placeholder={String(field?.pricePerHour)}
                 onChange={handlePricePerHourChange}
               />
             </div>
@@ -224,6 +232,18 @@ export default function EditField({ params }: { params: { id: string } }) {
               className="!self-stretch !flex-[0_0_auto] !flex !w-full"
               type="submit"
               onClick={handleSubmit}
+              disabled={
+                name === '' ||
+                location === '' ||
+                pricePerHour === undefined ||
+                syntheticGrass === undefined ||
+                indoor === undefined ||
+                playerBench === undefined ||
+                watcherBench === undefined ||
+                keeperId === ''
+                  ? true
+                  : false
+              }
             >
               Simpan
             </Button>

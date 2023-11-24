@@ -106,7 +106,7 @@ export default function AddField() {
     setLocation(e.target.value);
   };
   const handlePricePerHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPricePerHour(e.target.value);
+    setPricePerHour(Number(e.target.value));
   };
   const handleKeeperIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setkeeperId(e.target.value);
