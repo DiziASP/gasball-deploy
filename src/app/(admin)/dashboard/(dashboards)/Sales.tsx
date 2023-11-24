@@ -35,8 +35,7 @@ import { useEffect, useState } from 'react';
 
 async function getAllReservation() {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/reservation`);
+    const res = await fetch(`/api/reservation`);
     const data = await res.json();
 
     return data['data']['reservation'];
@@ -47,8 +46,7 @@ async function getAllReservation() {
 
 async function getReports(year: number) {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/report/${year}`);
+    const res = await fetch(`/api/report/${year}`);
     const data = await res.json();
 
     return data['data']['report'];
@@ -168,7 +166,7 @@ export default function SalesDashboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((invoice, index) => (
+            {data.slice(0, 20).map((invoice, index) => (
               <TableRow key={index + 1}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>

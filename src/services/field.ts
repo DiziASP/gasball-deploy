@@ -72,7 +72,7 @@ export const getFieldByKeeperId = async (
     )
     .eq('keeperId', keeperId as string);
   const { data, error } = await query;
-  console.log(data, error);
+  // console.log(data, error);
   return { data, error };
 };
 

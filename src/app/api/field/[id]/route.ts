@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await getFieldById(id);
   if (error) {
-    console.log(error);
+    // console.log(error);
     return NextResponse.json(
       {
         status: 'error',

@@ -4,7 +4,7 @@ export interface ReservationPayload {
   customerId: string;
   customerName: string;
   orderDate: string;
-  hourRange: string;
+  hourRange: number;
   totalPrice: number;
   paidStatus: boolean;
   created_at: string;

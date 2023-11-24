@@ -81,8 +81,7 @@ const lapanganPayload: {
 
 async function getAllFieldData() {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field`);
+    const res = await fetch(`/api/field`);
     const data = await res.json();
     return data['data']['field'];
   } catch (err) {
@@ -119,7 +118,7 @@ export default function FieldPage() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await getAllFieldData();
-      setData(res);
+      setData(res['data']['field']);
     };
 
     fetchData();
