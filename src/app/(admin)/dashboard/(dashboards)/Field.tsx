@@ -32,13 +32,13 @@ async function getAllField() {
 interface DeleteConfirmationPopupProps {
   onDelete: () => void;
   onCancel: () => void;
-  id : string;
-  name : string;
-  location : string;
-  syntheticGrass : boolean;
-  indoor : boolean;
-  playerBench : boolean;
-  watcherBench : boolean;
+  id: string;
+  name: string;
+  location: string;
+  syntheticGrass: boolean;
+  indoor: boolean;
+  playerBench: boolean;
+  watcherBench: boolean;
 }
 
 async function deleteField(id: string) {
@@ -67,39 +67,42 @@ const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="gap-5 bg-white w-3/4 h-2/3 p-20 m-20 rounded-3xl block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-        <h2 className='p-5 text-center' >Konfirmasi hapus lapangan</h2>
+        <h2 className="p-5 text-center">Konfirmasi hapus lapangan</h2>
         <div className="flex pt-10 px-10 gap-4">
           <Image
-                    src="/assets/images/field.jpg"
-                    alt=""
-                    width={180}
-                    height={280}
-                  />
-          <div className='flex-col justify-center'>
+            src="/assets/images/field.jpg"
+            alt=""
+            width={180}
+            height={280}
+          />
+          <div className="flex-col justify-center">
             <h3 className="h-24"> {name}</h3>
             <h4 className="pt-2"> {location}</h4>
-            <p className='font-medium text-base'> {syntheticGrass ? 'Rumput Sintentis' : 'Rumput Alami'}
-            {indoor ? ' | Indoor' : ' | Outdoor'
-            } {playerBench && '| Bench Pemain'} {watcherBench && '| Bench Penonton'
-            } </p>
+            <p className="font-medium text-base">
+              {' '}
+              {syntheticGrass ? 'Rumput Sintentis' : 'Rumput Alami'}
+              {indoor ? ' | Indoor' : ' | Outdoor'}{' '}
+              {playerBench && '| Bench Pemain'}{' '}
+              {watcherBench && '| Bench Penonton'}{' '}
+            </p>
           </div>
         </div>
-        <div className='flex w-full px-10 pt-10 gap-5 items-center  justify-center'>
-        <Button
-              className="w-3/4 h-14 rounded-xl"
-              type="submit"
-              variant={'destructive'}
-              onClick={onDelete}
-            >
-              Hapus
-            </Button>
-            <Button
-              className=" w-3/4 h-14 rounded-xl"
-              variant={'outline'}
-              onClick={onCancel}
-            >
-              Batal
-            </Button>
+        <div className="flex w-full px-10 pt-10 gap-5 items-center  justify-center">
+          <Button
+            className="w-3/4 h-14 rounded-xl"
+            type="submit"
+            variant={'destructive'}
+            onClick={onDelete}
+          >
+            Hapus
+          </Button>
+          <Button
+            className=" w-3/4 h-14 rounded-xl"
+            variant={'outline'}
+            onClick={onCancel}
+          >
+            Batal
+          </Button>
         </div>
       </div>
     </div>
@@ -143,7 +146,6 @@ export default function FieldManagement() {
   };
 
   return (
-    
     <div>
       <div className="grid m-10 gap-10">
         <div className="flex inline-flex justify-between">
@@ -179,22 +181,14 @@ export default function FieldManagement() {
                   {fields.map(
                     (row: {
                       id: React.Key | null | undefined;
-                      name:
-                        | string
-                        | undefined;
-                      location:
-                        | string
-                        
-                        | undefined;
+                      name: string | undefined;
+                      location: string | undefined;
                       syntheticGrass: any;
                       Indoor: any;
                       playerBench: any;
                       watcherBench: any;
                       users: {
-                        full_name:
-                          | string
-                         
-                          | undefined;
+                        full_name: string | undefined;
                       };
                       pricePerHour: { toString: () => string };
                     }) => (
@@ -219,18 +213,30 @@ export default function FieldManagement() {
                         </TableCell>
                         <TableCell>
                           <Link href={`dashboard/field/${row.id}/edit`}>
-                            <button >
+                            <button>
                               <Pencil2Icon />
                             </button>
                           </Link>
                         </TableCell>
                         <TableCell>
-                            <button onClick={() => handleShowPopup(String(row.id))}>
-                              <TrashIcon />
-                            </button>
-                          {showPopup && selectedField===row.id && (
-        <DeleteConfirmationPopup onDelete={handleDelete} onCancel={handleCancel} name={row.name} id={row.id} location={row.location}  syntheticGrass={row.syntheticGrass} indoor={row.indoor} playerBench={row.playerBench} watcherBench={row.watcherBench}/>
-      )}
+                          <button
+                            onClick={() => handleShowPopup(String(row.id))}
+                          >
+                            <TrashIcon />
+                          </button>
+                          {showPopup && selectedField === row.id && (
+                            <DeleteConfirmationPopup
+                              onDelete={handleDelete}
+                              onCancel={handleCancel}
+                              name={row.name}
+                              id={row.id}
+                              location={row.location}
+                              syntheticGrass={row.syntheticGrass}
+                              indoor={row.indoor}
+                              playerBench={row.playerBench}
+                              watcherBench={row.watcherBench}
+                            />
+                          )}
                         </TableCell>
                       </TableRow>
                     )

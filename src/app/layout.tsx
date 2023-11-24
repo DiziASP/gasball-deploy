@@ -22,7 +22,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient()
+  const supabase = createClient();
 
   return (
     <html lang="en" suppressHydrationWarning>
