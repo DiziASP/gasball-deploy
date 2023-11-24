@@ -52,8 +52,7 @@ export default function KeeperHistory({ keeperId }: Props) {
 
   useEffect(() => {
     const fetchKeeperFieldReservations = async () => {
-      const origin = 'http://localhost:3000';
-      const res = await fetch(`${origin}/api/reservation?keeperId=${keeperId}`);
+      const res = await fetch(`/api/reservation?keeperId=${keeperId}`);
       const json = await res.json();
       if (!res.ok) {
         throw new Error(json['message']);
@@ -63,8 +62,7 @@ export default function KeeperHistory({ keeperId }: Props) {
     };
 
     const fetchKeeperFields = async () => {
-      const origin = 'http://localhost:3000';
-      const res = await fetch(`${origin}/api/field?keeperId=${keeperId}`);
+      const res = await fetch(`/api/field?keeperId=${keeperId}`);
       const json = await res.json();
       if (!res.ok) {
         throw new Error(json['message']);
