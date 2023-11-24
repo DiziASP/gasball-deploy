@@ -25,16 +25,12 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
 
     setIsLoading(true);
     try {
-      const origin = 'http://localhost:3000';
-      const res = await fetch(
-        `${origin}/api/reservation/${reservation?.id}/pay`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
+      const res = await fetch(`/api/reservation/${reservation?.id}/pay`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
+      });
       const json = await res.json();
       const data: ReservationPayload = json['data']['reservation'];
       console.log(data);
@@ -48,9 +44,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchReservation = async () => {
-      const origin = 'http://localhost:3000';
-      console.log(origin);
-      const res = await fetch(`${origin}/api/reservation/${reservationId}`);
+      const res = await fetch(`/api/reservation/${reservationId}`);
       const json = await res.json();
 
       if (!res.ok) {
