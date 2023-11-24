@@ -105,7 +105,7 @@ export const OrderSummaryCard = ({
         </div>
       </CardContent>
       <CardFooter className="flex align-middle justify-center mt-6">
-        <Button className="px-8 border-neutral-600 h-7">Edit</Button>
+        {/* <Button className="px-8 border-neutral-600 h-7">Edit</Button> */}
       </CardFooter>
     </Card>
   );

@@ -321,7 +321,9 @@ export default function FieldDetail({ params }: { params: { id: string } }) {
       );
       throw new Error('Network response was not ok');
     }
-    router.push(`field/${FieldID}/payment`);
+    const res = await response.json();
+    const reservationID = res['data']['reservation']['id'];
+    router.push(`/payment/${reservationID}`);
   };
 
   return (
