@@ -21,7 +21,6 @@ import { useRouter } from 'next/navigation';
 
 async function getDetailField(id: string) {
   try {
-    
     const res = await fetch(`/api/field/${id}`);
     const data = await res.json();
 
