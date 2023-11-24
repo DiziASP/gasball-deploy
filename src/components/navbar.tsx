@@ -54,46 +54,59 @@ export function Navigation() {
 
   return (
     <nav className="flex flex-row justify-between items-center shadow-md py-3 px-12 bg-background">
-      <Brand />
+      {/* Brand */}
+      {user ? (
+        <Link href="/" legacyBehavior passHref>
+          <p className="font-bold text-3xl cursor-pointer">GasBall</p>
+        </Link>
+      ) : (
+        <p className="font-bold text-3xl cursor-pointer">GasBall</p>
+      )}
       <NavigationMenu>
         <NavigationMenuList>
           {/* Field */}
-          <NavigationMenuItem>
-            <Link href="/field">
-              <NavigationMenuTrigger>Field</NavigationMenuTrigger>
-            </Link>
-            <NavigationMenuContent>
-              <ul className="flex flex-col w-[240px] px-4 py-2">
-                {components.map((component) => (
-                  <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
-                    {component.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+          {user?.role === 'pelanggan' && (
+            <NavigationMenuItem>
+              <Link href="/field">
+                <NavigationMenuTrigger>Field</NavigationMenuTrigger>
+              </Link>
+              <NavigationMenuContent>
+                <ul className="flex flex-col w-[240px] px-4 py-2">
+                  {components.map((component) => (
+                    <ListItem
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
+                    >
+                      {component.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          )}
 
           {/* History */}
-          <NavigationMenuItem>
-            <Link href="/history" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                History
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {user?.role === 'pelanggan' && (
+            <NavigationMenuItem>
+              <Link href="/history" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  History
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
 
           {/* Dashboard - jangan lupa diubah kalo udah bisa ambil state pengguna */}
-          <NavigationMenuItem>
-            <Link href="/dashboard" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Dashboard
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {user?.role === 'penjaga' && (
+            <NavigationMenuItem>
+              <Link href="/dashboard" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Dashboard
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
 
           {/* Profile */}
           <NavigationMenuItem>
