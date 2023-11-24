@@ -93,9 +93,7 @@ export const getReservationByKeeperId = async (
   const supabase = createClient(cookies());
   const query = supabase
     .from('reservations')
-    .select(
-      '*, fields!inner (*, keeperId), users (*)'
-    )
+    .select('*, fields!inner (*, keeperId), users (*)')
     .eq('fields.keeperId', keeperId as string);
   const { data, error } = await query;
   return { data, error };
