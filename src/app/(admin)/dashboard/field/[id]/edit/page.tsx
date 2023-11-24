@@ -11,13 +11,36 @@ import {
   FormMessage,
   FormField
 } from '@/components/ui/form';
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import RadioGroup from '@/components/ui/radiogroup';
 import CheckBox from '@/components/ui/checkbox';
 import { useRouter } from 'next/navigation';
+import {
+  FieldPayload,
+  UserPayload
+} from '../../../../../../../types/payload.types';
+import { Field } from 'react-hook-form';
+import { set } from 'date-fns';
+
+async function getPenjaga() {
+  try {
+    const res = await fetch(`/api/user?role=penjaga`);
+    const data = await res.json();
+
+    return data['data']['user'];
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function getDetailField(id: string) {
   try {
@@ -50,6 +73,8 @@ export default function EditField({ params }: { params: { id: string } }) {
   }>();
 
   const [selectedOption, setSelectedOption] = useState(''); // State untuk nilai terpilih
+  const [penjaga, setPenjaga] = useState<string>('Pilih penjaga'); // State untuk nilai terpilih
+  const [penjagaArray, setPenjagaArray] = useState<UserPayload[]>([]); // State untuk nilai terpilih
 
   const handleOptionChange = (selected: string) => {
     return selected;
@@ -59,29 +84,35 @@ export default function EditField({ params }: { params: { id: string } }) {
     const fetchData = async () => {
       const data = await getDetailField(params.id);
       setField(data);
+      const penjaga = await getPenjaga();
+      setPenjagaArray(penjaga);
+      setPenjaga(penjaga[0].full_name);
     };
     fetchData();
   });
 
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+  const [name, setName] = useState(field?.name);
+  const [location, setLocation] = useState(field?.location);
   const [pricePerHour, setPricePerHour] = useState<Number | undefined>(
-    undefined
+    field?.pricePerHour
   );
   const [syntheticGrass, setSyntheticGrass] = useState<boolean | undefined>(
     undefined
   );
   const [indoor, setIndoor] = useState<boolean | undefined>(undefined);
-  const [playerBench, setPlayerBench] = useState<boolean | undefined>(
-    undefined
-  );
-  const [watcherBench, setWatcherBench] = useState<boolean | undefined>(
-    undefined
-  );
-  const [available, setAvailable] = useState<boolean>(true);
+  const [playerBench, setPlayerBench] = useState<boolean>(false);
+  const [watcherBench, setWatcherBench] = useState<boolean>(false);
+  const [available, setAvailable] = useState<boolean | undefined>(undefined);
   const [keeperId, setkeeperId] = useState('');
 
   const handleSubmit = async () => {
+    if (name === '' || name === undefined) {
+      setName(name);
+    } else if (location === '' || location === undefined) {
+      setLocation(location);
+    } else if (pricePerHour === undefined) {
+      setPricePerHour(pricePerHour);
+    }
     const res = await fetch(`/api/field/${params.id}`, {
       method: 'PUT',
       headers: {
@@ -101,7 +132,7 @@ export default function EditField({ params }: { params: { id: string } }) {
     });
     const data = await res.json();
     console.log(data);
-    router.back();
+    router.push('/dashboard');
     console.log(
       name,
       location,
@@ -158,6 +189,7 @@ export default function EditField({ params }: { params: { id: string } }) {
               <Input
                 type="name"
                 placeholder={field?.name}
+                defaultValue={field?.name}
                 onChange={handleNameChange}
               />
             </div>
@@ -167,6 +199,7 @@ export default function EditField({ params }: { params: { id: string } }) {
               <Label>Lokasi Lapangan</Label>
               <Input
                 type="text"
+                defaultValue={field?.location}
                 placeholder={field?.location}
                 onChange={handleLocationChange}
               />
@@ -178,6 +211,7 @@ export default function EditField({ params }: { params: { id: string } }) {
               <Input
                 type="number"
                 placeholder={String(field?.pricePerHour)}
+                defaultValue={String(field?.pricePerHour)}
                 onChange={handlePricePerHourChange}
               />
             </div>
@@ -218,12 +252,26 @@ export default function EditField({ params }: { params: { id: string } }) {
           </div>
           <div className="items-center gap-[15px] self-stretch w-full flex-[0_0_auto] flex relative">
             <div className="grid w-full items-center gap-1.5">
-              <Label>Penjaga Lapangan</Label>
-              <Input
-                type="desc"
-                placeholder="Masukkan id penjaga lapangan (uu-id)"
-                onChange={handleKeeperIdChange}
-              />
+              <Label className="font-bold">Penjaga lapangan</Label>
+              <Select onValueChange={(e) => setkeeperId(e)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    placeholder="Pilih penjaga"
+                    defaultValue={penjaga}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Pilih Penjaga</SelectItem>
+
+                  {penjagaArray.map((field) => {
+                    return (
+                      <SelectItem key={field.id} value={field.id as string}>
+                        {field.full_name}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -233,13 +281,9 @@ export default function EditField({ params }: { params: { id: string } }) {
               type="submit"
               onClick={handleSubmit}
               disabled={
-                name === '' ||
-                location === '' ||
-                pricePerHour === undefined ||
                 syntheticGrass === undefined ||
                 indoor === undefined ||
-                playerBench === undefined ||
-                watcherBench === undefined ||
+                available === undefined ||
                 keeperId === ''
                   ? true
                   : false

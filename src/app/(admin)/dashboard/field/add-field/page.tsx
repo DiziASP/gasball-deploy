@@ -11,13 +11,20 @@ import {
   FormMessage,
   FormField
 } from '@/components/ui/form';
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import RadioGroup from '@/components/ui/radiogroup';
 import CheckBox from '@/components/ui/checkbox';
 import { useRouter } from 'next/navigation';
+import { UserPayload } from '../../../../../../types/payload.types';
 
 async function getDetailField(id: string) {
   try {
@@ -25,6 +32,17 @@ async function getDetailField(id: string) {
     const data = await res.json();
 
     return data['data']['field'];
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getPenjaga() {
+  try {
+    const res = await fetch(`/api/user?role=penjaga`);
+    const data = await res.json();
+
+    return data['data']['user'];
   } catch (err) {
     console.log(err);
   }
@@ -54,16 +72,29 @@ export default function AddField() {
   const handleOptionChange = (selected: string) => {
     return selected;
   };
-
+  useEffect(() => {
+    const fetchData = async () => {
+      const penjaga = await getPenjaga();
+      setPenjagaArray(penjaga);
+      setPenjaga(penjaga[0].full_name);
+    };
+    fetchData();
+  });
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [pricePerHour, setPricePerHour] = useState(0);
-  const [syntheticGrass, setSyntheticGrass] = useState<boolean>(false);
-  const [indoor, setIndoor] = useState<boolean>(false);
+  const [pricePerHour, setPricePerHour] = useState<Number | undefined>(
+    undefined
+  );
+  const [syntheticGrass, setSyntheticGrass] = useState<boolean | undefined>(
+    undefined
+  );
+  const [indoor, setIndoor] = useState<boolean | undefined>(undefined);
   const [playerBench, setPlayerBench] = useState<boolean>(false);
   const [watcherBench, setWatcherBench] = useState<boolean>(false);
-  const [available, setAvailable] = useState<boolean>(false);
+  const [available, setAvailable] = useState<boolean | undefined>(undefined);
   const [keeperId, setkeeperId] = useState('');
+  const [penjaga, setPenjaga] = useState<string>('Pilih penjaga'); // State untuk nilai terpilih
+  const [penjagaArray, setPenjagaArray] = useState<UserPayload[]>([]); // State untuk nilai terpili
 
   const handleSubmit = async () => {
     const res = await fetch(`/api/field/`, {
@@ -85,7 +116,7 @@ export default function AddField() {
     });
     const data = await res.json();
     console.log(data);
-    router.back();
+    router.push('/dashboard');
     console.log(
       name,
       location,
@@ -202,12 +233,26 @@ export default function AddField() {
           </div>
           <div className="items-center gap-[15px] self-stretch w-full flex-[0_0_auto] flex relative">
             <div className="grid w-full items-center gap-1.5">
-              <Label>Penjaga Lapangan</Label>
-              <Input
-                type="desc"
-                placeholder="Masukkan id penjaga lapangan (uu-id)"
-                onChange={handleKeeperIdChange}
-              />
+              <Label className="font-bold">Penjaga lapangan</Label>
+              <Select onValueChange={(e) => setkeeperId(e)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue
+                    placeholder="Pilih penjaga "
+                    defaultValue={penjaga}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Pilih Penjaga</SelectItem>
+
+                  {penjagaArray.map((field) => {
+                    return (
+                      <SelectItem key={field.id} value={field.id as string}>
+                        {field.full_name}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -216,12 +261,22 @@ export default function AddField() {
               className="!self-stretch !flex-[0_0_auto] !flex !w-full"
               type="submit"
               onClick={handleSubmit}
+              disabled={
+                name === '' ||
+                location === '' ||
+                pricePerHour === undefined ||
+                syntheticGrass === undefined ||
+                indoor === undefined ||
+                keeperId === ''
+                  ? true
+                  : false
+              }
             >
               Simpan
             </Button>
             <Button
               className="!self-stretch !flex-[0_0_auto] !flex !w-full"
-              onClick={() => router.back()}
+              onClick={() => router.push('/dashboard')}
             >
               Batal
             </Button>
