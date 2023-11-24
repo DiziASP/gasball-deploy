@@ -68,7 +68,7 @@ export default function Login() {
 
   return (
     <div className="flex w-full px-40 py-20 items-center justify-center">
-      <div className="flex flex-wrap-reverse rounded-[40px] flex-row items-center justify-center bg-white h-full overflow-hidden">
+      <div className="flex rounded-[40px] flex-row items-center justify-center bg-white h-full overflow-hidden">
         <div className="flex flex-col py-20 px-40 items-center justify-center w-full max-w-[625px]">
           {/* Brand */}
           <Brand />

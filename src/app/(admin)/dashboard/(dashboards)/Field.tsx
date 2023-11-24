@@ -11,7 +11,6 @@ import {
   TableRow
 } from '@/components/ui/table';
 import React, { useState, useEffect } from 'react';
-import Dropdown from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { Pencil2Icon } from '@radix-ui/react-icons';
 import { TrashIcon } from '@radix-ui/react-icons';
@@ -20,7 +19,7 @@ import Image from 'next/image';
 
 async function getAllField() {
   try {
-    const res = await fetch(`$/api/field`);
+    const res = await fetch(`/api/field`);
     const data = await res.json();
 
     return data['data']['field'];
@@ -93,6 +92,7 @@ const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
             type="submit"
             variant={'destructive'}
             onClick={onDelete}
+            title={'Hapus'}
           >
             Hapus
           </Button>
@@ -100,6 +100,7 @@ const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
             className=" w-3/4 h-14 rounded-xl"
             variant={'outline'}
             onClick={onCancel}
+            title={'Batal'}
           >
             Batal
           </Button>
@@ -148,7 +149,7 @@ export default function FieldManagement() {
   return (
     <div>
       <div className="grid m-10 gap-10">
-        <div className="flex inline-flex justify-between">
+        <div className="flex justify-between">
           <h1>Data Lapangan</h1>
           <Link href={`dashboard/field/add-field`}>
             <button
@@ -228,11 +229,11 @@ export default function FieldManagement() {
                             <DeleteConfirmationPopup
                               onDelete={handleDelete}
                               onCancel={handleCancel}
-                              name={row.name}
+                              name={row.name!}
                               id={row.id}
-                              location={row.location}
+                              location={row.location!}
                               syntheticGrass={row.syntheticGrass}
-                              indoor={row.indoor}
+                              indoor={row.Indoor!}
                               playerBench={row.playerBench}
                               watcherBench={row.watcherBench}
                             />
