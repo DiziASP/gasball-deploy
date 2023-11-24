@@ -39,7 +39,7 @@ type Reservation = {
 
 async function getReservationHistory(customerId: string){
   try {
-    const apiUrl = "http://localhost:3000/api/reservation";
+    const apiUrl = "/api/reservation";
     const query = `?customerId=${customerId}`;
     const response = await fetch(apiUrl + query, {
       method: 'GET',
@@ -62,7 +62,7 @@ async function getReservationHistory(customerId: string){
 
 async function getSelf(){
   try {
-    const apiUrl = `http://localhost:3000/api/auth/self`;
+    const apiUrl = `/api/auth/self`;
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {

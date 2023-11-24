@@ -10,7 +10,7 @@ import KeeperHistory from './(histories)/KeeperHistory';
 
 async function getSelf(){
   try {
-    const apiUrl = `http://localhost:3000/api/auth/self`;
+    const apiUrl = `/api/auth/self`;
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
