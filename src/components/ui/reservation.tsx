@@ -29,19 +29,23 @@ type Field = {
   datePlots: oneDaySlot[];
 };
 
-
 interface Props {
   lapangan: Field;
   scheduleData: {
     orderDate: string;
     hourRange: number;
   };
-  onScheduleDataChange: (data: { orderDate: string; hourRange: number }) => void;
-
+  onScheduleDataChange: (data: {
+    orderDate: string;
+    hourRange: number;
+  }) => void;
 }
 
-
-export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Props): JSX.Element => {
+export const Reservation = ({
+  lapangan,
+  scheduleData,
+  onScheduleDataChange
+}: Props): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedStatusArray, setSelectedStatusArray] = useState<boolean[]>([]);
 
@@ -63,7 +67,7 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
     if (clickedDate < yesterday) {
       return;
     }
-  
+
     if (modifiers.selected) {
       setSelectedDate(new Date()); // Deselect date if it's already selected
     } else {
@@ -73,40 +77,40 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
       } else {
         setSelectedDate(clickedDate); // Select the clicked date
         // Update selectedStatusArray based on the selected date
-        const selectedSlot = lapangan.datePlots.find(
-          (slot) => {
-            return LocaleDatetoUTCformat(slot.date.toLocaleDateString('en-US')) === LocaleDatetoUTCformat(clickedDate.toLocaleDateString('en-US'))
-          }
-        );
-        console.log("Selected slot", selectedSlot);
+        const selectedSlot = lapangan.datePlots.find((slot) => {
+          return (
+            LocaleDatetoUTCformat(slot.date.toLocaleDateString('en-US')) ===
+            LocaleDatetoUTCformat(clickedDate.toLocaleDateString('en-US'))
+          );
+        });
+        console.log('Selected slot', selectedSlot);
         setSelectedStatusArray(selectedSlot?.statusArray || []);
         // console.log(LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')));
       }
     }
   };
 
-  function LocaleDatetoUTCformat(date : string) : string {
+  function LocaleDatetoUTCformat(date: string): string {
     const arr = date.split('/');
     const newDate = arr[2] + '-' + arr[0] + '-' + arr[1];
     return newDate;
   }
-  
+
   const [detailReservation, setDetailReservation] = useState<{
     orderDate: string;
     hourRange: number;
-  }>({ orderDate: '', hourRange: 0});
+  }>({ orderDate: '', hourRange: 0 });
   const receiveDataFromChild = (dataFromReservation: {
     orderDate: string;
     hourRange: number;
   }) => {
     const { orderDate, hourRange } = dataFromReservation;
     setDetailReservation({ orderDate, hourRange });
-  }
-
+  };
 
   return (
     <div className="grid gap-5 h-full mb-5 w-[320px]">
-      <div className='grid w-full place-content-center bg-white  rounded-2xl shadow-xl'>
+      <div className="grid w-full place-content-center bg-white  rounded-2xl shadow-xl">
         <Calendar
           selected={selectedDate}
           onDayClick={handleDayClick}
@@ -116,7 +120,11 @@ export const Reservation = ({ lapangan, scheduleData, onScheduleDataChange }: Pr
       <div className="overflow-y-scroll h-full bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
           key={selectedStatusArray.toString()}
-          selectedDate={LocaleDatetoUTCformat(selectedDate.toLocaleDateString('en-US')).split('T')[0]}
+          selectedDate={
+            LocaleDatetoUTCformat(
+              selectedDate.toLocaleDateString('en-US')
+            ).split('T')[0]
+          }
           price={lapangan?.pricePerHour}
           statusArray={selectedStatusArray}
           onScheduleDataChange={onScheduleDataChange}
