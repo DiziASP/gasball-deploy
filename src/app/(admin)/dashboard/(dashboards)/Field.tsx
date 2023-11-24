@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Table,
   TableBody,
@@ -8,153 +10,148 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import React from 'react';
-import Dropdown from '@/components/ui/dropdown';
+import React, { useState, useEffect } from 'react';
+import Dropdown from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { Pencil2Icon } from '@radix-ui/react-icons';
+import { TrashIcon } from '@radix-ui/react-icons';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
-const fields = [
-  {
-    id: 1,
-    nama_lapangan: 'Futsal Arena A',
-    alamat: 'Jalan Merdeka No. 10',
-    keterangan: 'Lapangan berukuran standar untuk turnamen lokal.',
-    penjaga_lapangan: 'budi123',
-    hourly_price: 100000
-  },
-  {
-    id: 2,
-    nama_lapangan: 'Soccer Field X',
-    alamat: 'Jalan Pahlawan No. 25',
-    keterangan: 'Lapangan sintetis dengan pemandangan kota.',
-    penjaga_lapangan: 'anto456',
-    hourly_price: 120000
-  },
-  {
-    id: 3,
-    nama_lapangan: 'Futsal Zone B',
-    alamat: 'Jalan Jenderal Sudirman No. 8',
-    keterangan: 'Lapangan dengan pencahayaan bagus.',
-    penjaga_lapangan: 'agus789',
-    hourly_price: 90000
-  },
-  {
-    id: 4,
-    nama_lapangan: 'Futsal Square',
-    alamat: 'Jalan Gatot Subroto No. 14',
-    keterangan: 'Lapangan indoor dengan AC.',
-    penjaga_lapangan: 'suhardi123',
-    hourly_price: 150000
-  },
-  {
-    id: 5,
-    nama_lapangan: 'Goal Futsal Center',
-    alamat: 'Jalan Diponegoro No. 30',
-    keterangan: 'Lapangan dengan fasilitas kamar mandi bersih.',
-    penjaga_lapangan: 'hendro321',
-    hourly_price: 110000
-  },
-  {
-    id: 6,
-    nama_lapangan: 'Green Field Futsal',
-    alamat: 'Jalan Asia Afrika No. 5',
-    keterangan: 'Lapangan di tengah taman dengan alam yang hijau.',
-    penjaga_lapangan: 'joko567',
-    hourly_price: 95000
-  },
-  {
-    id: 7,
-    nama_lapangan: 'Futsal Paradise',
-    alamat: 'Jalan Thamrin No. 20',
-    keterangan: 'Lapangan dengan area penonton yang luas.',
-    penjaga_lapangan: 'hadi890',
-    hourly_price: 130000
-  },
-  {
-    id: 8,
-    nama_lapangan: 'Soccer Center',
-    alamat: 'Jalan Imam Bonjol No. 12',
-    keterangan: 'Lapangan yang terletak di pusat kota.',
-    penjaga_lapangan: 'eko234',
-    hourly_price: 85000
-  },
-  {
-    id: 9,
-    nama_lapangan: 'Futsal Galaxy',
-    alamat: 'Jalan Cendrawasih No. 17',
-    keterangan: 'Lapangan dengan mural seni di dinding.',
-    penjaga_lapangan: 'rudi567',
-    hourly_price: 100000
-  },
-  {
-    id: 10,
-    nama_lapangan: 'Victory Futsal Park',
-    alamat: 'Jalan Veteran No. 7',
-    keterangan: 'Lapangan dengan fasilitas cuci sepatu gratis.',
-    penjaga_lapangan: 'agus123',
-    hourly_price: 120000
-  },
-  {
-    id: 11,
-    nama_lapangan: 'Futsal Dreamland',
-    alamat: 'Jalan Arjuna No. 22',
-    keterangan: 'Lapangan dengan desain modern.',
-    penjaga_lapangan: 'bambang890',
-    hourly_price: 110000
-  },
-  {
-    id: 12,
-    nama_lapangan: 'Goalkeeper Arena',
-    alamat: 'Jalan Kusuma Bangsa No. 13',
-    keterangan: 'Lapangan dengan gawang-gawang yang berkualitas.',
-    penjaga_lapangan: 'david456',
-    hourly_price: 125000
-  },
-  {
-    id: 13,
-    nama_lapangan: 'Futsal United',
-    alamat: 'Jalan Pelita No. 28',
-    keterangan: 'Lapangan dengan suhu ruangan yang nyaman.',
-    penjaga_lapangan: 'heru678',
-    hourly_price: 95000
-  },
-  {
-    id: 14,
-    nama_lapangan: 'Futsal World',
-    alamat: 'Jalan Kartini No. 9',
-    keterangan: 'Lapangan dengan tema permainan bola dunia.',
-    penjaga_lapangan: 'surya789',
-    hourly_price: 105000
-  },
-  {
-    id: 15,
-    nama_lapangan: 'Soccer Star',
-    alamat: 'Jalan Tanjung Duren No. 4',
-    keterangan: 'Lapangan favorit untuk latihan tim lokal.',
-    penjaga_lapangan: 'rudi987',
-    hourly_price: 90000
+async function getAllField() {
+  try {
+    const res = await fetch(`$/api/field`);
+    const data = await res.json();
+
+    return data['data']['field'];
+  } catch (err) {
+    console.log(err);
   }
-];
+}
 
-export default async function FieldManagement() {
-  const options = [
-    {
-      label: 'Edit detail lapangan',
-      link: 'dashboard/field/01/edit'
-    },
-    {
-      label: 'Lihat riwayat penggunaan lapangan',
-      link: 'dashboard/field/01/history'
-    }
-  ];
+interface DeleteConfirmationPopupProps {
+  onDelete: () => void;
+  onCancel: () => void;
+  id : string;
+  name : string;
+  location : string;
+  syntheticGrass : boolean;
+  indoor : boolean;
+  playerBench : boolean;
+  watcherBench : boolean;
+}
+
+async function deleteField(id: string) {
+  try {
+    const res = await fetch(`/api/field/${id}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const DeleteConfirmationPopup: React.FC<DeleteConfirmationPopupProps> = ({
+  onDelete,
+  onCancel,
+  id,
+  name,
+  location,
+  syntheticGrass,
+  indoor,
+  playerBench,
+  watcherBench
+}) => {
   return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="gap-5 bg-white w-3/4 h-2/3 p-20 m-20 rounded-3xl block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+        <h2 className='p-5 text-center' >Konfirmasi hapus lapangan</h2>
+        <div className="flex pt-10 px-10 gap-4">
+          <Image
+                    src="/assets/images/field.jpg"
+                    alt=""
+                    width={180}
+                    height={280}
+                  />
+          <div className='flex-col justify-center'>
+            <h3 className="h-24"> {name}</h3>
+            <h4 className="pt-2"> {location}</h4>
+            <p className='font-medium text-base'> {syntheticGrass ? 'Rumput Sintentis' : 'Rumput Alami'}
+            {indoor ? ' | Indoor' : ' | Outdoor'
+            } {playerBench && '| Bench Pemain'} {watcherBench && '| Bench Penonton'
+            } </p>
+          </div>
+        </div>
+        <div className='flex w-full px-10 pt-10 gap-5 items-center  justify-center'>
+        <Button
+              className="w-3/4 h-14 rounded-xl"
+              type="submit"
+              variant={'destructive'}
+              onClick={onDelete}
+            >
+              Hapus
+            </Button>
+            <Button
+              className=" w-3/4 h-14 rounded-xl"
+              variant={'outline'}
+              onClick={onCancel}
+            >
+              Batal
+            </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function FieldManagement() {
+  const [fields, setFields] = useState([]);
+
+  // Fungsi untuk mengambil data lapangan dari API
+  const fetchData = async () => {
+    const data = await getAllField();
+    setFields(data);
+  };
+
+  // Fungsi polling untuk mengambil data setiap 5 detik
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchData();
+    }, 500); // Interval polling setiap 5 detik (5000 milidetik)
+
+    // Bersihkan interval saat komponen tidak lagi ter-render
+    return () => clearInterval(interval);
+  }, []); // Jalankan sekali saat komponen ter-render
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleDelete = () => {
+    deleteField(String(selectedField));
+    setShowPopup(false);
+  };
+
+  const handleCancel = () => {
+    // Batalkan tindakan hapus dan sembunyikan pop-up
+    setShowPopup(false);
+  };
+  const [selectedField, setSelectedField] = useState('');
+  const handleShowPopup = (fieldId: string) => {
+    setSelectedField(fieldId);
+    setShowPopup(true);
+  };
+
+  return (
+    
     <div>
-      <div className="grid m-20 gap-10">
-        <div className="flex justify-between">
+      <div className="grid m-10 gap-10">
+        <div className="flex inline-flex justify-between">
           <h1>Data Lapangan</h1>
           <Link href={`dashboard/field/add-field`}>
             <button
               className={
-                'h-[30px] self-end inline-flex items-center gap-[10px] px-[10px] py-[5px] relative bg-[#ffffff] hover:bg-slate-100 rounded-[6px] shadow-[0px_2px_4px_#1e293b40]'
+                'h-full self-end inline-flex items-center gap-[10px] px-[10px] py-[5px] relative bg-[#ffffff] hover:bg-slate-100 rounded-[6px] shadow-[0px_2px_4px_#1e293b40]'
               }
             >
               <div className="relative w-fit mt-[-1.00px] font-medium text-[#000000] text-[14px] tracking-[0] leading-[20px] whitespace-nowrap">
@@ -169,30 +166,75 @@ export default async function FieldManagement() {
               <Table>
                 <TableCaption>Data Lapangan</TableCaption>
                 <TableHeader>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Nama Lapangan</TableCell>
-                    <TableCell>Alamat</TableCell>
-                    <TableCell>Keterangan</TableCell>
+                  <TableRow className="font-medium">
+                    <TableCell>Nama</TableCell>
+                    <TableCell>Lokasi</TableCell>
+                    <TableCell>Fasilitas</TableCell>
                     <TableCell>Penjaga Lapangan</TableCell>
                     <TableCell>Harga/Jam</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {fields.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>{row.id}</TableCell>
-                      <TableCell>{row.nama_lapangan}</TableCell>
-                      <TableCell>{row.alamat}</TableCell>
-                      <TableCell>{row.keterangan}</TableCell>
-                      <TableCell>{row.penjaga_lapangan}</TableCell>
-                      <TableCell>{row.hourly_price}</TableCell>
-                      <TableCell>
-                        <Dropdown options={options} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {fields.map(
+                    (row: {
+                      id: React.Key | null | undefined;
+                      name:
+                        | string
+                        | undefined;
+                      location:
+                        | string
+                        
+                        | undefined;
+                      syntheticGrass: any;
+                      Indoor: any;
+                      playerBench: any;
+                      watcherBench: any;
+                      users: {
+                        full_name:
+                          | string
+                         
+                          | undefined;
+                      };
+                      pricePerHour: { toString: () => string };
+                    }) => (
+                      <TableRow key={row.id}>
+                        <TableCell>{row.name}</TableCell>
+                        <TableCell>{row.location}</TableCell>
+                        <TableCell>
+                          {row.syntheticGrass
+                            ? 'Rumput Sintentis'
+                            : 'Rumput Alami'}{' '}
+                          {row.Indoor ? '| Indoor' : '| Outdoor'}{' '}
+                          {row.playerBench && '| Bench Pemain'}{' '}
+                          {row.watcherBench && '| Bench Penonton'}
+                        </TableCell>
+                        <TableCell>{row.users.full_name}</TableCell>
+                        <TableCell>
+                          Rp{' '}
+                          {row.pricePerHour
+                            .toString()
+                            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+                          ,00
+                        </TableCell>
+                        <TableCell>
+                          <Link href={`dashboard/field/${row.id}/edit`}>
+                            <button >
+                              <Pencil2Icon />
+                            </button>
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                            <button onClick={() => handleShowPopup(String(row.id))}>
+                              <TrashIcon />
+                            </button>
+                          {showPopup && selectedField===row.id && (
+        <DeleteConfirmationPopup onDelete={handleDelete} onCancel={handleCancel} name={row.name} id={row.id} location={row.location}  syntheticGrass={row.syntheticGrass} indoor={row.indoor} playerBench={row.playerBench} watcherBench={row.watcherBench}/>
+      )}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
