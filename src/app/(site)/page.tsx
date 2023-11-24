@@ -1,16 +1,20 @@
-import { useAuth } from '@/components/AuthProvider';
+'use client';
+
+import { AuthContext, useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext } from 'react';
 
 /**
  * Halaman Utama (Pencarian Lapangan)
  * @returns The landing page component.
  */
-export default async function Home() {
-  const { user } = useAuth();
+export default function Home() {
+  const auth = useContext(AuthContext);
 
-  console.log(user);
+  console.log('kontole');
+  console.log(auth);
 
   return (
     <div className="flex flex-grow flex-col justify-center items-center gap-9">

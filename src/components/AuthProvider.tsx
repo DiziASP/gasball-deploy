@@ -1,7 +1,14 @@
 'use client';
 
 import { Session, SupabaseClient, User } from '@supabase/supabase-js';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { UserPayload } from '../../types/payload.types';
 import { createClient } from '@/lib/supabase/client';
 
@@ -11,13 +18,11 @@ interface AuthContextValue {
   session: Session | null | undefined;
 }
 
-export const AuthContext = createContext<AuthContextValue | undefined>(
-  undefined
-);
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 const supabase = createClient();
 
-export const AuthProvider = ({ ...props }) => {
+export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
   const [session, setSession] = useState<Session | null>();
   const [authUser, setAuthUser] = useState<User | null>();
   const [user, setUser] = useState<UserPayload | null>();
@@ -41,6 +46,7 @@ export const AuthProvider = ({ ...props }) => {
       setUserFromFetch(activeSession?.user.id);
     }
     getActiveSession();
+    //   }, []);
 
     const {
       data: { subscription: authListener }
@@ -53,7 +59,7 @@ export const AuthProvider = ({ ...props }) => {
     return () => {
       authListener?.unsubscribe();
     };
-  });
+  }, []);
 
   const value = useMemo(() => {
     return {
@@ -61,9 +67,9 @@ export const AuthProvider = ({ ...props }) => {
       user,
       authUser
     };
-  }, [session, user, authUser]);
+  }, []);
 
-  return <AuthContext.Provider value={value} {...props} />;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
