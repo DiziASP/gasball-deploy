@@ -52,7 +52,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       console.log(origin);
       const res = await fetch(`${origin}/api/reservation/${reservationId}`);
       const json = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(json['message']);
       }
