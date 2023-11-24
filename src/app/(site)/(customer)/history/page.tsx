@@ -8,7 +8,7 @@ import KeeperHistory from './(histories)/KeeperHistory';
  * @returns The purchase history page component.
  */
 
-async function getSelf(){
+async function getSelf() {
   try {
     const apiUrl = `/api/auth/self`;
     const response = await fetch(apiUrl, {
@@ -33,7 +33,7 @@ export default function History() {
   const [role, setRole] = useState<string>();
 
   useEffect(() => {
-    async function getRole(){
+    async function getRole() {
       const self = await getSelf();
       setRole(self.data.user.role);
       console.log(role);
