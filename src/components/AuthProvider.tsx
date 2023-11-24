@@ -33,41 +33,45 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       .select()
       .eq('id', id as string)
       .select();
-    setUser(data as UserPayload);
+    // console.log(id);
+    // setUser(data as UserPayload);
   };
 
   useEffect(() => {
-    async function getActiveSession() {
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+        setAuthUser(session?.user);
+        console.log(authUser);
+        setUserFromFetch(authUser?.id);
+      }
+    );
+    const setData = async () => {
       const {
-        data: { session: activeSession }
+        data: { session },
+        error
       } = await supabase.auth.getSession();
-      setSession(activeSession);
-      setAuthUser(activeSession?.user ?? null);
-      setUserFromFetch(activeSession?.user.id);
-    }
-    getActiveSession();
-    //   }, []);
+      if (error) {
+        throw error;
+      }
+      setSession(session);
+      setAuthUser(session?.user);
+      console.log(authUser);
 
-    const {
-      data: { subscription: authListener }
-    } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      setSession(currentSession);
-      setAuthUser(currentSession?.user ?? null);
-      setUserFromFetch(currentSession?.user.id);
-    });
+      setUserFromFetch(authUser?.id);
+    };
+    setData();
 
     return () => {
-      authListener?.unsubscribe();
+      listener?.subscription.unsubscribe();
     };
   }, []);
 
-  const value = useMemo(() => {
-    return {
-      session,
-      user,
-      authUser
-    };
-  }, []);
+  const value = {
+    session,
+    user,
+    authUser
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

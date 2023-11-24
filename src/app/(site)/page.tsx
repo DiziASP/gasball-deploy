@@ -2,15 +2,25 @@
 
 import { AuthContext, useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 /**
  * Halaman Utama (Pencarian Lapangan)
  * @returns The landing page component.
  */
 export default function Home() {
+  // useEffect(() => {
+  //   const kontol = async () => {
+  //     const supabase = createClient();
+  //     console.log(await supabase.auth.getUser());
+  //   };
+
+  //   kontol();
+  // }, []);
+
   const auth = useContext(AuthContext);
 
   console.log('kontole');
