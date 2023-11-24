@@ -23,7 +23,6 @@ const keeperId = '0de8ba4c-ce84-4374-a2a5-ecbf9776efb8'; // ini nanti ganti ke a
 
 async function getKeeperFieldReservations() {
   try {
-    const origin = 'http://localhost:3000';
     const res = await fetch(`${origin}/api/reservation?keeperId=${keeperId}`);
     const data = await res.json();
     // console.log(data);
@@ -35,8 +34,7 @@ async function getKeeperFieldReservations() {
 
 async function getKeeperFields() {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field?keeperId=${keeperId}`);
+    const res = await fetch(`/api/field?keeperId=${keeperId}`);
     const data = await res.json();
     // console.log(data);
     return data['data']['field'];

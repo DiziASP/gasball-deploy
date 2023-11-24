@@ -1,12 +1,12 @@
 'use client';
-import { Brand } from "@/components/brand"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { Brand } from '@/components/brand';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 /**
  * Register Page
@@ -57,14 +57,16 @@ export default function Register(formData: any) {
   }, []);
 
   const [user, setUser] = useState({
-    email: "",
-    password: "",
-    username: "",
-    full_name: "",
-    phone_number: "",
-    role: "pelanggan",
-  })
-  const [failmsg, setFailmsg] = useState("Gagal masuk, coba periksa kembali email dan password Anda!")
+    email: '',
+    password: '',
+    username: '',
+    full_name: '',
+    phone_number: '',
+    role: 'pelanggan'
+  });
+  const [failmsg, setFailmsg] = useState(
+    'Gagal masuk, coba periksa kembali email dan password Anda!'
+  );
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -79,96 +81,116 @@ export default function Register(formData: any) {
             {/* Form */}
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Username</Label>
-              <Input 
+              <Input
                 id="username"
                 type="text"
-                placeholder="Username" 
+                placeholder="Username"
                 value={user.username}
-                onChange={(e) => setUser({...user, username: e.target.value})}
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
               />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Email</Label>
-              <Input 
+              <Input
                 id="email"
                 type="email"
-                placeholder="Email" 
+                placeholder="Email"
                 value={user.email}
-                onChange={(e) => setUser({...user, email: e.target.value})}
+                onChange={(e) => setUser({ ...user, email: e.target.value })}
               />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Full Name</Label>
-              <Input 
+              <Input
                 id="full_name"
-                type="text" 
-                placeholder="Full Name" 
+                type="text"
+                placeholder="Full Name"
                 value={user.full_name}
-                onChange={(e) => setUser({...user, full_name: e.target.value})}
+                onChange={(e) =>
+                  setUser({ ...user, full_name: e.target.value })
+                }
               />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Phone Number</Label>
-              <Input 
+              <Input
                 id="phone_number"
-                type="tel" 
-                placeholder="Phone Number" 
+                type="tel"
+                placeholder="Phone Number"
                 value={user.phone_number}
-                onChange={(e) => setUser({...user, phone_number: e.target.value})}
+                onChange={(e) =>
+                  setUser({ ...user, phone_number: e.target.value })
+                }
               />
             </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label>Password</Label>
-              <Input 
+              <Input
                 id="password"
-                type="password" 
-                placeholder="Password" 
+                type="password"
+                placeholder="Password"
                 value={user.password}
-                onChange={(e) => setUser({...user, password: e.target.value})}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </div>
           </div>
-          {failed ? <div className="rounded-[5px] px-5 py-2 bg-red-100 w-full">
-            <Label className="text-red-800">{failmsg}</Label>
-          </div> : <></>}
+          {failed ? (
+            <div className="rounded-[5px] px-5 py-2 bg-red-100 w-full">
+              <Label className="text-red-800">{failmsg}</Label>
+            </div>
+          ) : (
+            <></>
+          )}
           {/* Button */}
           <div className="grid w-full max-w-sm items-center gap-4 m-5">
-            <Button type="submit" onClick={async () => {
-              try {
-                setLoading(true);
-                setFailed(false);
-                const res = await fetch("/api/auth/register", {
-                  method: "POST",
-                  body: JSON.stringify(user),
-                  headers: {
-                    "Content-Type": "application/json",
+            <Button
+              type="submit"
+              onClick={async () => {
+                try {
+                  setLoading(true);
+                  setFailed(false);
+                  const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(user),
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  });
+                  if (res.ok) {
+                    const data = await res.json();
+                    router.push('/auth/login');
+                  } else {
+                    setLoading(false);
+                    setFailmsg('Gagal daftar, coba periksa data Anda!');
+                    setFailed(true);
                   }
-                });
-                if (res.ok) {
-                  const data = await res.json();
-                  router.push("/auth/login");
-                } else {
+                } catch (error) {
+                  console.error('Error: ', error);
                   setLoading(false);
-                  setFailmsg("Gagal daftar, coba periksa data Anda!")
+                  setFailmsg('Sistem sedang error! Coba beberapa saat lagi');
                   setFailed(true);
                 }
-              } catch (error) {
-                console.error('Error: ', error);
-                setLoading(false)
-                setFailmsg("Sistem sedang error! Coba beberapa saat lagi");
-                setFailed(true)
-              }
-            }}>{ loading ? "Loading" : "Sign Up"}</Button>
+              }}
+            >
+              {loading ? 'Loading' : 'Sign Up'}
+            </Button>
           </div>
           {/* Back */}
           <div className="flex items-center gap-1.5 mt-20">
-            <Link href="/auth/login" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <Link
+              href="/auth/login"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               &lt; Go Back
             </Link>
           </div>
-        </div>    
+        </div>
         <div className="grow rounded-[20px] max-w-[800px] m-10 overflow-hidden">
-          <img className="w-full h-full object-cover" src='/assets/images/register-img.jpg' alt=''/>
+          <img
+            className="w-full h-full object-cover"
+            src="/assets/images/register-img.jpg"
+            alt=""
+          />
         </div>
       </div>
     </div>

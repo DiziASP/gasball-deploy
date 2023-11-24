@@ -166,7 +166,7 @@ export default function SalesDashboard() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((invoice, index) => (
+            {data.slice(0, 20).map((invoice, index) => (
               <TableRow key={index + 1}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>
