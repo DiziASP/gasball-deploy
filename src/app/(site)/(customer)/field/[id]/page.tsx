@@ -30,7 +30,7 @@ type Field = {
 };
 
 async function fetchFieldData(fieldId: string) {
-  const apiUrl = `http://localhost:3000/api/field/${fieldId}`;
+  const apiUrl = `/api/field/${fieldId}`;
 
   try {
     const response = await fetch(apiUrl, {
@@ -150,7 +150,7 @@ const user_dummy: user_self = {
 
 async function fetchReservationData(id: string) {
   try {
-    const apiUrl = `http://localhost:3000/api/reservation?fieldId=${id}`;
+    const apiUrl = `/api/reservation?fieldId=${id}`;
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -173,7 +173,7 @@ async function fetchReservationData(id: string) {
 
 async function getSelf() {
   try {
-    const apiUrl = `http://localhost:3000/api/auth/self`;
+    const apiUrl = `/api/auth/self`;
     const response = await fetch(apiUrl, {
       method: 'GET',
       headers: {
@@ -288,7 +288,7 @@ export default function FieldDetail({
   }) => {
     console.log(FieldID, CustomerID, CustomerName, orderDate, HourRange, TotalPrice);
     console.log('booked');
-    const apiUrl = `http://localhost:3000/api/reservation`;
+    const apiUrl = `/api/reservation`;
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -313,15 +313,15 @@ export default function FieldDetail({
 
 
   return (
-    <div className='grid w-full h-fit my-5 place-content-center'>
-      <div className="flex w-fit min-w-[80%] h-fit mx-4 my-4 p-7 bg-white rounded-2xl h-screen">
-        {lapangan?(
+    <div className='grid w-full h-full my-5 place-content-center'>
+      <div className="flex w-fit min-w-[80%] h-fit mx-4 my-4 p-7 bg-white rounded-2xl">
+        {(lapangan && self)?(
         <div className='flex flex-row h-fit gap-5'>
           <div className='grid w-full h-fit place-content-center'>
             <img
               src="/assets/images/field.jpg"
               alt=""
-              className="z-1 w-full h-full object-cover rounded-3xl shadow-2xl" />
+              className="z-1 w-full h-fit object-cover rounded-3xl shadow-2xl" />
             <div className='flex w-full'>
               <div className="flex flex-row z-2 w-full h-fit gap-10 p-5 bg-white rounded-[21px] -mt-60 m-5">
                 <div className="flex flex-col">
@@ -388,8 +388,8 @@ export default function FieldDetail({
                           onClick={() => {
                             handleBookButtonClicked({
                               FieldID: lapangan.id,
-                              CustomerID: user_dummy.id,
-                              CustomerName: user_dummy.full_name,
+                              CustomerID: self.id,
+                              CustomerName: self.full_name,
                               HourRange: scheduleData.hourRange,
                               TotalPrice: scheduleData.hourRange * lapangan.pricePerHour,
                               orderDate: scheduleData.orderDate
