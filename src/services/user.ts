@@ -9,6 +9,20 @@ export interface UserUpdatePayload {
   phone_number?: String | null;
 }
 
+export const getAllUser = async () => {
+  const supabase = createClient(cookies());
+  const query = supabase.from('users').select();
+  const { data, error } = await query;
+  return { data, error };
+};
+
+export const getUserByRole = async (role: string) => {
+  const supabase = createClient(cookies());
+  const query = supabase.from('users').select().eq('role', role);
+  const { data, error } = await query;
+  return { data, error };
+};
+
 export const getUserById = async (id: string | undefined) => {
   const supabase = createClient(cookies());
   const query = supabase
