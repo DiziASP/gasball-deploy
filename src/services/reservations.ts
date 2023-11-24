@@ -31,7 +31,7 @@ export const getReservations = async (reservationFilter: ReservationFilter) => {
     .from('reservations')
     .select('*, fields (id, name), users (id, username, full_name)');
 
-  console.log(yearStart, monthStart, yearEnd, monthEnd);
+  // console.log(yearStart, monthStart, yearEnd, monthEnd);
 
   if (paidStatus !== null) {
     query.eq('paidStatus', paidStatus);
@@ -83,6 +83,20 @@ export const getReservationByCustomerId = async (
     .from('reservations')
     .select('*, fields (id, name), users (id, username, full_name)')
     .eq('customerId', customerId as string);
+  const { data, error } = await query;
+  return { data, error };
+};
+
+export const getReservationByKeeperId = async (
+  keeperId: string | null | undefined
+) => {
+  const supabase = createClient(cookies());
+  const query = supabase
+    .from('reservations')
+    .select(
+      '*, fields!inner (id, name, keeperId), users (id, username, full_name)'
+    )
+    .eq('fields.keeperId', keeperId as string);
   const { data, error } = await query;
   return { data, error };
 };
