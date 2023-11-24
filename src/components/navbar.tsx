@@ -87,7 +87,7 @@ export function Navigation() {
           )}
 
           {/* History */}
-          {user?.role === 'pelanggan' && (
+          {(user?.role === 'pelanggan' || user?.role === 'penjaga') && (
             <NavigationMenuItem>
               <Link href="/history" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -98,7 +98,7 @@ export function Navigation() {
           )}
 
           {/* Dashboard - jangan lupa diubah kalo udah bisa ambil state pengguna */}
-          {user?.role === 'penjaga' && (
+          {user?.role === 'admin' && (
             <NavigationMenuItem>
               <Link href="/dashboard" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
