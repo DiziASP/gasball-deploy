@@ -5,40 +5,15 @@ import {
   FieldPayload,
   ReservationPayload
 } from '../../../../../../types/payload.types';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card';
-import Image from 'next/image';
-import { MdCalendarMonth, MdLocationPin } from 'react-icons/md';
-import { HiOutlineClock, HiOutlineMinus } from 'react-icons/hi';
-
-import { FaRegCheckCircle } from 'react-icons/fa';
-import { Separator } from '@radix-ui/react-separator';
-import { Button } from '@/components/ui/button';
-import { ReloadIcon } from '@radix-ui/react-icons';
 import { OrderSummaryCard } from '@/components/ui/order-summary';
 import { PaymentCard } from '@/components/ui/payment';
-
-async function getReservation(reservationId: string) {
-  try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/reservation/${reservationId}`);
-    const data = await res.json();
-    // console.log(data);
-    return data['data']['reservation'];
-  } catch (err) {
-    console.log(err);
-    // harusnya ke not found ini
-  }
-}
+import Error from 'next/error';
+import { useRouter } from 'next/navigation';
 
 export default function PaymentPage({ params }: { params: { id: string } }) {
-  const keeperId = params.id;
+  const { push } = useRouter();
+
+  const reservationId = params.id;
   const [reservation, setReservation] = useState<ReservationPayload>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPaying, setIsPaying] = useState<boolean>(true);
@@ -59,10 +34,11 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
           }
         }
       );
-      const data: ReservationPayload = await res.json();
+      const json = await res.json();
+      const data: ReservationPayload = json['data']['reservation'];
       console.log(data);
       setIsLoading(false);
-      setIsPaying(data.paidStatus);
+      setIsPaying(!data.paidStatus);
       // return data['data']['reservation'];
     } catch (err) {
       // console.log(err);
@@ -70,20 +46,32 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
   }
 
   useEffect(() => {
-    getReservation(keeperId).then((data: ReservationPayload) => {
-      // if (data.paidStatus) {
-      //   // redirect ke not found jg
-      // }
-      console.log(data);
+    const fetchReservation = async () => {
+      const origin = 'http://localhost:3000';
+      console.log(origin);
+      const res = await fetch(`${origin}/api/reservation/${reservationId}`);
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json['message']);
+      }
+      const data: ReservationPayload = json['data']['reservation'];
       setReservation(data);
       setField(data.fields);
-      // console.log(data);
+      setIsPaying(!data.paidStatus);
+    };
+    fetchReservation().catch((e: Error) => {
+      push('/not-found');
     });
-  }, [keeperId]);
+  }, [reservationId, push]);
 
   useEffect(() => {
-    console.log(isLoading);
-  }, [isLoading]);
+    if (!isPaying) {
+      console.log('kfwoajiogbaiho');
+      setTimeout(() => {
+        push('/');
+      }, 5000);
+    }
+  }, [isPaying, push]);
 
   return (
     <div className="flex-1 my-12 rounded-3xl px-96 py-[72px]">

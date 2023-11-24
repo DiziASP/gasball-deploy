@@ -12,6 +12,7 @@ import { HiOutlineMinus } from 'react-icons/hi';
 import { Button } from './button';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { MouseEventHandler } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   isLoading: boolean;
@@ -28,6 +29,8 @@ export const PaymentCard = ({
   isLoading,
   handlePayOnClick
 }: Props): JSX.Element => {
+  const { push } = useRouter();
+
   return (
     <Card className="w-full px-4 py-8 drop-shadow-xl rounded-3xl flex flex-col align-middle justify-between gap-8">
       <CardHeader>
@@ -87,7 +90,13 @@ export const PaymentCard = ({
             </Button>
           )
         ) : (
-          <Button className="px-8 border-neutral-600 h-7" variant={'outline'}>
+          <Button
+            className="px-8 border-neutral-600 h-7"
+            variant={'outline'}
+            onClick={() => {
+              push('/');
+            }}
+          >
             Go back
           </Button>
         )}
