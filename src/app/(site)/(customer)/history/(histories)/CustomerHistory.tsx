@@ -13,6 +13,16 @@ import { Badge } from '@/components/ui/badge';
 
 import { useEffect, useState } from 'react';
 
+function extractDate(date: string) {
+  return new Date(date).toLocaleDateString();
+}
+
+function extractTime(date: string, range: number) {
+  const startTime = new Date(date).getHours();
+  const endTime = new Date(date).getHours() + range;
+  return `${startTime}.00 - ${endTime}.00`;
+}
+
 type Reservation = {
   id: string;
   fieldId: string;
@@ -127,11 +137,13 @@ export default function CustomerHistory() {
               </TableHeader>
               <TableBody>
                 {tableData.map((row) => (
-                  <TableRow key={row.orderDate}>
-                    <TableCell>{dateFormat(row.orderDate)}</TableCell>
+                  <TableRow key={row.id}>
+                    <TableCell>{extractDate(row.orderDate)}</TableCell>
                     <TableCell>{row.fields.name}</TableCell>
-                    <TableCell>{row.hourRange}</TableCell>
-                    <TableCell>Rp{row.totalPrice}</TableCell>
+                    <TableCell>
+                      {extractTime(row.orderDate, row.hourRange)}
+                    </TableCell>
+                    <TableCell>Rp{row.totalPrice.toLocaleString()}</TableCell>
                     <TableCell>
                       {row.paidStatus ? (
                         <Badge className="border-transparent bg-green-500 hover:bg-green-500/80">

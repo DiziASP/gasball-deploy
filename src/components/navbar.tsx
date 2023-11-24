@@ -15,7 +15,20 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Brand } from './brand';
-import { UserNav } from './user-nav';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
+import { AuthContext } from './AuthProvider';
+import { signOut } from '@/services/auth';
+import { redirect, useRouter } from 'next/navigation';
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -30,53 +43,122 @@ const components: { title: string; href: string; description: string }[] = [
   }
 ];
 
+const getInitial = (name: string) => {
+  const n_slice = name.split(' ');
+  return n_slice[0][0] + n_slice[n_slice.length - 1][0];
+};
+
 export function Navigation() {
+  const user = React.useContext(AuthContext)?.user;
+  const { push } = useRouter();
+
   return (
     <nav className="flex flex-row justify-between items-center shadow-md py-3 px-12 bg-background">
-      <Brand />
+      {/* Brand */}
+      {user ? (
+        <Link href="/" legacyBehavior passHref>
+          <p className="font-bold text-3xl cursor-pointer">GasBall</p>
+        </Link>
+      ) : (
+        <p className="font-bold text-3xl cursor-pointer">GasBall</p>
+      )}
       <NavigationMenu>
         <NavigationMenuList>
           {/* Field */}
-          <NavigationMenuItem>
-            <Link href="/field">
-              <NavigationMenuTrigger>Field</NavigationMenuTrigger>
-            </Link>
-            <NavigationMenuContent>
-              <ul className="flex flex-col w-[240px] px-4 py-2">
-                {components.map((component) => (
-                  <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
-                  >
-                    {component.description}
-                  </ListItem>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+          {user?.role === 'pelanggan' && (
+            <NavigationMenuItem>
+              <Link href="/field">
+                <NavigationMenuTrigger>Field</NavigationMenuTrigger>
+              </Link>
+              <NavigationMenuContent>
+                <ul className="flex flex-col w-[240px] px-4 py-2">
+                  {components.map((component) => (
+                    <ListItem
+                      key={component.title}
+                      title={component.title}
+                      href={component.href}
+                    >
+                      {component.description}
+                    </ListItem>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          )}
 
           {/* History */}
-          <NavigationMenuItem>
-            <Link href="/history" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                History
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {user?.role === 'pelanggan' && (
+            <NavigationMenuItem>
+              <Link href="/history" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  History
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
 
           {/* Dashboard - jangan lupa diubah kalo udah bisa ambil state pengguna */}
-          <NavigationMenuItem>
-            <Link href="/dashboard" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Dashboard
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {user?.role === 'penjaga' && (
+            <NavigationMenuItem>
+              <Link href="/dashboard" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Dashboard
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
 
           {/* Profile */}
           <NavigationMenuItem>
-            <UserNav />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage
+                      src="/assets/images/profile.jpeg"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>
+                      {getInitial(user?.full_name || 'Guest')}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {user?.full_name || 'Guest'}
+                    </p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {user && (
+                  <DropdownMenuItem
+                    onClick={() => {
+                      fetch('/api/auth/logout', {
+                        method: 'POST'
+                      }).then(() => {
+                        push('/login');
+                      });
+                    }}
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                )}
+                {!user && (
+                  <Link href="auth/login">
+                    <DropdownMenuItem>Log in</DropdownMenuItem>
+                  </Link>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

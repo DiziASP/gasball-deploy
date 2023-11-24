@@ -18,30 +18,10 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { SyntheticEvent, useEffect, useState } from 'react';
-
-const keeperId = '0de8ba4c-ce84-4374-a2a5-ecbf9776efb8'; // ini nanti ganti ke auth user
-
-async function getKeeperFieldReservations() {
-  try {
-    const res = await fetch(`${origin}/api/reservation?keeperId=${keeperId}`);
-    const data = await res.json();
-    // console.log(data);
-    return data['data']['reservation'];
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-async function getKeeperFields() {
-  try {
-    const res = await fetch(`/api/field?keeperId=${keeperId}`);
-    const data = await res.json();
-    // console.log(data);
-    return data['data']['field'];
-  } catch (err) {
-    console.log(err);
-  }
-}
+import {
+  FieldPayload,
+  ReservationPayload
+} from '../../../../../../types/payload.types';
 
 function extractDate(date: string) {
   return new Date(date).toLocaleDateString();
@@ -61,69 +41,46 @@ function orderByPaidStatus(a: any, b: any) {
   return a.paidStatus - b.paidStatus;
 }
 
-export default function KeeperHistory() {
-  const [data, setData] = useState<
-    {
-      id: string;
-      fieldId: string;
-      customerId: string;
-      customerName: string;
-      orderDate: string;
-      hourRange: number;
-      totalPrice: number;
-      paidStatus: boolean;
-      created_at: string;
-      updated_at: string;
-      fields: {
-        id: string;
-        name: string;
-        keeperId: string;
-      };
-      users: {
-        id: string;
-        username: string;
-        full_name: string;
-      };
-    }[]
-  >([]);
+interface Props {
+  keeperId: string;
+}
 
-  const [fields, setField] = useState<
-    {
-      id: string;
-      name: string;
-      location: string;
-      pricePerHour: number;
-      syntheticGrass: boolean;
-      indoor: boolean;
-      playerBench: boolean;
-      watcherBench: boolean;
-      available: boolean;
-      users: {
-        id: string;
-        full_name: string;
-        phone_number: string;
-      };
-    }[]
-  >([]);
-
+export default function KeeperHistory({ keeperId }: Props) {
+  const [reservations, setReservations] = useState<ReservationPayload[]>([]);
+  const [fields, setField] = useState<FieldPayload[]>([]);
   const [selectedField, setSelectedField] = useState<string>('all');
 
   useEffect(() => {
-    getKeeperFields().then((data) => {
+    const fetchKeeperFieldReservations = async () => {
+      const origin = 'http://localhost:3000';
+      const res = await fetch(`${origin}/api/reservation?keeperId=${keeperId}`);
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json['message']);
+      }
+      const data: ReservationPayload[] = json['data']['reservation'];
+      setReservations(data);
+    };
+
+    const fetchKeeperFields = async () => {
+      const origin = 'http://localhost:3000';
+      const res = await fetch(`${origin}/api/field?keeperId=${keeperId}`);
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json['message']);
+      }
+      const data: FieldPayload[] = json['data']['field'];
       setField(data);
-      // setSelectedField(data[0].id);
+    };
+
+    fetchKeeperFields().catch((e) => {
+      console.log(e);
     });
 
-    getKeeperFieldReservations().then((data) => {
-      data.sort(orderByOrderDate);
-      setData(data.reverse());
+    fetchKeeperFieldReservations().catch((e) => {
+      console.log(e);
     });
-  }, []);
-
-  function handleFieldChange(event: any) {
-    // console.log(event);
-    setSelectedField(event);
-  }
+  }, [keeperId]);
 
   return (
     <div>
@@ -132,7 +89,7 @@ export default function KeeperHistory() {
           <h1>Riwayat Penggunaan Lapangan</h1>
           <div>
             <Label className="font-bold">Pilih lapangan</Label>
-            <Select onValueChange={handleFieldChange}>
+            <Select onValueChange={(e) => setSelectedField(e)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue
                   placeholder="Semua Lapangan "
@@ -144,7 +101,7 @@ export default function KeeperHistory() {
 
                 {fields.map((field) => {
                   return (
-                    <SelectItem key={field.id} value={field.id}>
+                    <SelectItem key={field.id} value={field.id as string}>
                       {field.name}
                     </SelectItem>
                   );
@@ -168,7 +125,7 @@ export default function KeeperHistory() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.map((row) => {
+                  {reservations.map((row) => {
                     if (
                       row.fieldId === selectedField ||
                       selectedField === 'all'
