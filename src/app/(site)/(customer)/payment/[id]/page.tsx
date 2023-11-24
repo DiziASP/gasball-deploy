@@ -1,17 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   FieldPayload,
   ReservationPayload
 } from '../../../../../../types/payload.types';
 import { OrderSummaryCard } from '@/components/ui/order-summary';
 import { PaymentCard } from '@/components/ui/payment';
-import Error from 'next/error';
 import { useRouter } from 'next/navigation';
+import { AuthContext } from '@/components/AuthProvider';
 
 export default function PaymentPage({ params }: { params: { id: string } }) {
   const { push } = useRouter();
+  const user = useContext(AuthContext)?.user;
 
   const reservationId = params.id;
   const [reservation, setReservation] = useState<ReservationPayload>();
@@ -51,10 +52,17 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
       console.log(origin);
       const res = await fetch(`${origin}/api/reservation/${reservationId}`);
       const json = await res.json();
+      
       if (!res.ok) {
         throw new Error(json['message']);
       }
+
       const data: ReservationPayload = json['data']['reservation'];
+
+      if (data.customerId !== user?.id) {
+        throw new Error('Youre not authorized');
+      }
+
       setReservation(data);
       setField(data.fields);
       setIsPaying(!data.paidStatus);
@@ -62,11 +70,10 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
     fetchReservation().catch((e: Error) => {
       push('/not-found');
     });
-  }, [reservationId, push]);
+  }, [reservationId, user, push]);
 
   useEffect(() => {
     if (!isPaying) {
-      console.log('kfwoajiogbaiho');
       setTimeout(() => {
         push('/');
       }, 5000);
