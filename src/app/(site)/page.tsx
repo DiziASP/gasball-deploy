@@ -1,12 +1,17 @@
+'use client';
+
+import { AuthContext, useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
+import { createClient } from '@/lib/supabase/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useContext, useEffect } from 'react';
 
 /**
  * Halaman Utama (Pencarian Lapangan)
  * @returns The landing page component.
  */
-export default async function Home() {
+export default function Home() {
   return (
     <div className="flex flex-grow flex-col justify-center items-center gap-9">
       <Image
