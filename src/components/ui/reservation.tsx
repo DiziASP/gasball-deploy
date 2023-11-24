@@ -11,22 +11,37 @@ type oneDaySlot = {
 };
 
 type Field = {
-  id: number;
+  id: string;
   name: string;
   syntheticGrass: boolean;
   indoor: boolean;
   playerBench: boolean;
   watcherBench: boolean;
   available: boolean;
-  hourlyPrice: number;
-  keeperID: number;
-  keeperContact: string;
-  address: string;
+  pricePerHour: number;
+  users: {
+    id: string;
+    full_name: string;
+    phone_number: string;
+  };
+  location: string;
   datePlots: oneDaySlot[];
+};
+
+type user_self = {
+  id: string;
+  email: string;
+  username: string;
+  full_name: string;
+  phone_number: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
 };
 
 interface Props {
   lapangan: Field;
+  user: user_self;
 }
 
 function searchDate(date: any, datePlots: oneDaySlot[]) {
@@ -39,14 +54,14 @@ function searchDate(date: any, datePlots: oneDaySlot[]) {
   return -1;
 }
 
-export const Reservation = (lapangan: Props): JSX.Element => {
+export const Reservation = ({ lapangan, user }: Props): JSX.Element => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedStatusArray, setSelectedStatusArray] = useState<boolean[]>([]);
 
   useEffect(() => {
     // Saat komponen pertama kali dimuat, atur selectedStatusArray sesuai dengan selectedDate (hari ini)
     const todayDate = new Date().setHours(0, 0, 0, 0);
-    const todaySlot = lapangan.lapangan.datePlots.find(
+    const todaySlot = lapangan.datePlots.find(
       (slot) => slot.date.setHours(0, 0, 0, 0) === todayDate
     );
     setSelectedStatusArray(todaySlot?.statusArray || []);
@@ -58,10 +73,11 @@ export const Reservation = (lapangan: Props): JSX.Element => {
     } else {
       setSelectedDate(day); // Select the clicked date
       // Update selectedStatusArray based on the selected date
-      const selectedSlot = lapangan.lapangan.datePlots.find(
+      const selectedSlot = lapangan.datePlots.find(
         (slot) => slot.date.getTime() === day.getTime()
       );
       setSelectedStatusArray(selectedSlot?.statusArray || []);
+      console.log(selectedDate.toISOString().split('T')[0]);
     }
     // Lakukan operasi lain yang diperlukan saat tanggal dipilih atau tidak dipilih
   };
@@ -76,10 +92,14 @@ export const Reservation = (lapangan: Props): JSX.Element => {
       <div></div>
       <div className="overflow-y-scroll h-11/12 bg-white rounded-2xl shadow-xl no-scrollbar">
         <ScheduleDay
-          key={selectedStatusArray.toString()}
-          price={lapangan.lapangan.hourlyPrice}
+          key={selectedDate.toISOString().split('T')[0]}
+          selectedDate={selectedDate.toISOString().split('T')[0]}
+          price={lapangan.pricePerHour}
           statusArray={selectedStatusArray}
           totalHours={0}
+          fieldID={lapangan.id}
+          customerID={user.id}
+          customerName={user.full_name}
         ></ScheduleDay>
       </div>
     </div>

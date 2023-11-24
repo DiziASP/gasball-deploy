@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json(
     {
       status: 'success',
-      message: 'Reservation updated succesfully',
+      message: 'Reservation created succesfully',
       data: { reservation: data }
     },
     { status: 200 }

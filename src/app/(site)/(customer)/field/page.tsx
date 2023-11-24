@@ -83,8 +83,7 @@ async function getAllFieldData() {
   try {
     const res = await fetch(`/api/field`);
     const data = await res.json();
-
-    return data;
+    return data['data']['field'];
   } catch (err) {
     console.log(err);
   }
@@ -104,6 +103,11 @@ export default function FieldPage() {
       playerBench: boolean;
       watcherBench: boolean;
       available: boolean;
+      user: {
+        id: string;
+        full_name: string;
+        phone_number: string;
+      };
     }[]
   >([]);
 
