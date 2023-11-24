@@ -20,8 +20,7 @@ import Image from 'next/image';
 
 async function getAllField() {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field`);
+    const res = await fetch(`$/api/field`);
     const data = await res.json();
 
     return data['data']['field'];
@@ -44,8 +43,7 @@ interface DeleteConfirmationPopupProps {
 
 async function deleteField(id: string) {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field/${id}`, {
+    const res = await fetch(`/api/field/${id}`, {
       method: 'DELETE'
     });
     const data = await res.json();
@@ -145,6 +143,7 @@ export default function FieldManagement() {
   };
 
   return (
+    
     <div>
       <div className="grid m-10 gap-10">
         <div className="flex inline-flex justify-between">

@@ -21,8 +21,7 @@ import { useRouter } from 'next/navigation';
 
 async function getDetailField(id: string) {
   try {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field/${id}`);
+    const res = await fetch(`/api/field/${id}`);
     const data = await res.json();
 
     return data['data']['field'];
@@ -75,8 +74,7 @@ export default function EditField({ params }: { params: { id: string } }) {
   const [keeperId, setkeeperId] = useState('');
 
   const handleSubmit = async () => {
-    const origin = 'http://localhost:3000';
-    const res = await fetch(`${origin}/api/field/${params.id}`, {
+    const res = await fetch(`/api/field/${params.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
