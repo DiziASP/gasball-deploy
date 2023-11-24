@@ -12,20 +12,6 @@ import { useContext, useEffect } from 'react';
  * @returns The landing page component.
  */
 export default function Home() {
-  // useEffect(() => {
-  //   const kontol = async () => {
-  //     const supabase = createClient();
-  //     console.log(await supabase.auth.getUser());
-  //   };
-
-  //   kontol();
-  // }, []);
-
-  const auth = useContext(AuthContext);
-
-  console.log('kontole');
-  console.log(auth);
-
   return (
     <div className="flex flex-grow flex-col justify-center items-center gap-9">
       <Image

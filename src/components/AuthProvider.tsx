@@ -32,9 +32,10 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       .from('users')
       .select()
       .eq('id', id as string)
-      .select();
+      .select()
+      .single();
     // console.log(id);
-    // setUser(data as UserPayload);
+    setUser(data as UserPayload);
   };
 
   useEffect(() => {
@@ -42,8 +43,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       (_event, session) => {
         setSession(session);
         setAuthUser(session?.user);
-        console.log(authUser);
-        setUserFromFetch(authUser?.id);
+        setUserFromFetch(session?.user.id);
       }
     );
     const setData = async () => {
@@ -56,9 +56,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<{}>) => {
       }
       setSession(session);
       setAuthUser(session?.user);
-      console.log(authUser);
-
-      setUserFromFetch(authUser?.id);
+      setUserFromFetch(session?.user.id);
     };
     setData();
 
