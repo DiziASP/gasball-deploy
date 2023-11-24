@@ -1,3 +1,4 @@
+import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,6 +8,10 @@ import Link from 'next/link';
  * @returns The landing page component.
  */
 export default async function Home() {
+  const { user } = useAuth();
+
+  console.log(user);
+
   return (
     <div className="flex flex-grow flex-col justify-center items-center gap-9">
       <Image
