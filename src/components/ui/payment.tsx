@@ -87,10 +87,7 @@ export const PaymentCard = ({
             </Button>
           )
         ) : (
-          <Button
-            className="px-8 border-neutral-600 h-7"
-            variant={'outline'}
-          >
+          <Button className="px-8 border-neutral-600 h-7" variant={'outline'}>
             Go back
           </Button>
         )}

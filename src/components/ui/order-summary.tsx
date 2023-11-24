@@ -46,7 +46,10 @@ interface Props {
   field: FieldPayload | undefined;
 }
 
-export const OrderSummaryCard = ({ reservation, field }: Props): JSX.Element => {
+export const OrderSummaryCard = ({
+  reservation,
+  field
+}: Props): JSX.Element => {
   return (
     <Card className="w-full px-4 py-8 drop-shadow-xl rounded-3xl">
       <CardHeader>
