@@ -12,6 +12,8 @@ import { useContext, useEffect } from 'react';
  * @returns The landing page component.
  */
 export default function Home() {
+  const user = useContext(AuthContext)?.user;
+
   return (
     <div className="flex flex-grow flex-col justify-center items-center gap-9">
       <Image
@@ -32,9 +34,13 @@ export default function Home() {
         <span className="font-bold text-accent">Renting a Field</span> has never
         been easier!
       </h1>
-      <Link href="/field">
-        <Button className="bg-blue-800 py-8 px-12 text-lg">Check Fields</Button>
-      </Link>
+      {user?.role === 'pelanggan' && (
+        <Link href="/field">
+          <Button className="bg-blue-800 py-8 px-12 text-lg">
+            Check Fields
+          </Button>
+        </Link>
+      )}
     </div>
   );
 }

@@ -27,8 +27,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { AuthContext } from './AuthProvider';
-import { signOut } from '@/services/auth';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -145,7 +144,8 @@ export function Navigation() {
                       fetch('/api/auth/logout', {
                         method: 'POST'
                       }).then(() => {
-                        push('/login');
+                        push('/auth/login');
+                        window.location.reload();
                       });
                     }}
                   >
