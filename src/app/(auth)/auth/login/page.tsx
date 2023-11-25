@@ -132,6 +132,7 @@ export default function Login() {
 
                   if (res.ok) {
                     router.push('/');
+                    window.location.reload();
                   } else {
                     setLoading(false);
                     setFailmsg(
